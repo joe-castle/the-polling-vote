@@ -1,16 +1,14 @@
 // Materialize
-$roboto-font-path: '~materialize-css/font/roboto/';
-$icons-font-path: '~materialize-css/font/material-design-icons/';
-@import '~materialize-css/sass/materialize.scss';
+@import 'components/_materialize.scss';
 
 // Utilities
-@import 'utils/_variables.scss';
+@import 'components/_variables.scss';
 
 // Base
-@import 'base/_typography.scss';
+@import 'components/_typography.scss';
 
 // Layout
-@import 'layout/_body.scss';
+@import 'components/_body.scss';
 
 // Components
 @import 'components/_header.scss';
