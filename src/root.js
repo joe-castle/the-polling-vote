@@ -5,7 +5,25 @@ import App from './containers/app';
 
 import DevTools from './containers/dev-tools';
 
-const store = configureStore();
+const initialState = {
+  polls: [{
+    submitter: 'jimmybob',
+    name: 'Do you like hand cream?',
+    options: {
+      yes: 3,
+      no: 2
+    }
+  }],
+  users: {
+    jimmybob: {
+      name: 'Jim',
+      ownPolls: [1],
+      votedPolls: [1]
+    }
+  }
+}
+
+const store = configureStore(initialState);
 
 if (process.env.NODE_ENV === 'production') {
   module.exports = () => (

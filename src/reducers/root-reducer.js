@@ -1,7 +1,9 @@
 import { combineReducers } from 'redux';
 
-import counter from './counter';
+import polls from './polls';
+import users from './users';
 
 export default combineReducers({
-  counter
+  polls,
+  users
 });

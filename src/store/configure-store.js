@@ -1,17 +1,20 @@
-import { createStore, compose } from 'redux';
+import { createStore, compose, applyMiddleware } from 'redux';
+import thunk from 'redux-thunk'
 
 import rootReducer from '../reducers/root-reducer';
 import DevTools from '../containers/dev-tools';
 
 if (process.env.NODE_ENV === 'production') {
-  const finalCreateStore = compose()(createStore);
+  const finalCreateStore = compose(
+    applyMiddleware(thunk)
+  )(createStore);
 
   module.exports = (initialState) => (
     finalCreateStore(rootReducer, initialState)
   );
 } else {
   const finalCreateStore = compose(
-    // midleware before DevTools
+    applyMiddleware(thunk),
     DevTools.instrument()
   )(createStore);
 
