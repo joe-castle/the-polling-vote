@@ -1,7 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import * as actions from '../actions/poll-actions';
+import * as polls from '../actions/poll-actions';
+import * as users from '../actions/user-actions';
 
 import CounterButton from '../components/counter-button';
 
@@ -13,7 +14,7 @@ export const App = ({dispatch, counter}) => (
     <p>Testing Redux</p>
     <p>{counter}</p>
     <CounterButton
-      onChangeClick={() => dispatch(actions.addPoll({
+      onChangeClick={() => dispatch(polls.addPoll({
         submitter: 'jimjones',
         name: 'Another Poll Yo!',
         options: {
@@ -23,7 +24,7 @@ export const App = ({dispatch, counter}) => (
       displayText='addPoll'
     />
     <CounterButton
-      onChangeClick={() => dispatch(actions.editPoll(0, {
+      onChangeClick={() => dispatch(polls.editPoll(0, {
         submitter: 'jimmybob',
         name: 'Do you like hand cream?',
         options: {
@@ -33,12 +34,21 @@ export const App = ({dispatch, counter}) => (
       displayText='editPoll'
     />
     <CounterButton
-      onChangeClick={() => dispatch(actions.deletePoll(0))}
+      onChangeClick={() => dispatch(polls.deletePoll(0))}
       displayText='deletePoll'
     />
     <CounterButton
-      onChangeClick={() => dispatch(actions.voteOnPoll(0, 'yes'))}
+      onChangeClick={() => dispatch(polls.voteOnPoll(0, 'yes'))}
       displayText='voteOnPoll'
+    />
+    <br/>
+    <CounterButton
+      onChangeClick={() => dispatch(users.addUser('thewinnerofall', {
+        name: 'Hayley',
+        ownPolls: [],
+        votedPolls: []
+      }))}
+      displayText='addUser'
     />
 	</div>
 );

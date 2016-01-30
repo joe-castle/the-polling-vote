@@ -1,9 +1,14 @@
 import * as types from '../actions/action-types';
 
-export default (state = {}, action) => {
-	switch(action.type) {
+export default (state = {}, {
+  type, username, payload
+}) => {
+	switch(type) {
     case types.ADD_USER:
-      return state;
+      return {
+        ...state,
+        [username]: payload
+      };
 		default:
 			return state;
 	}
