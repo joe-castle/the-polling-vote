@@ -10,15 +10,14 @@ const initialState = {
     submitter: 'jimmybob',
     name: 'Do you like hand cream?',
     options: {
-      yes: 3,
-      no: 2
+      yes: 0,
+      no: 0
     }
   }],
   users: {
     jimmybob: {
       name: 'Jim',
-      ownPolls: [1],
-      votedPolls: [1]
+      ownPolls: [0]
     }
   }
 }

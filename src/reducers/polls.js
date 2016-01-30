@@ -28,7 +28,7 @@ export default (state = [], {
       return [
         ...state.slice(0, pollID),
         newCopy,
-        ...state.slice(0, pollID)
+        ...state.slice(pollID+1)
       ];
 		default:
 			return state;
