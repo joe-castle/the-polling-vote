@@ -1,8 +1,8 @@
 import React from 'react';
 
-export default () => (
+export default ({baseColor}) => (
   <header>
-    <nav className='blue'>
+    <nav className={baseColor}>
       <div className='container'>
         <div className='nav-wrapper'>
           <a href='#' className='brand-logo'>The Polling Vote</a>

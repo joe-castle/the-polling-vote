@@ -8,14 +8,22 @@ import Navbar from '../components/navbar';
 import Content from '../components/content';
 import Footer from '../components/footer';
 
-export const App = ({dispatch, counter}) => (
-	<div>
-    <Navbar/>
-    <Content/>
-    <Footer/>
+export const App = ({
+  dispatch,
+  children,
+  baseColor,
+  polls,
+  users
+}) => (
+	<div className='wrapper'>
+    <Navbar baseColor={baseColor}/>
+    <Content polls={polls}/>
+    <Footer baseColor={baseColor}/>
 	</div>
 );
 export default connect(state => ({
-		counter: state.counter
+    baseColor: 'indigo',
+		polls: state.polls,
+    users: state.users
 	})
 )(App);

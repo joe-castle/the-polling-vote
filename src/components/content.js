@@ -1,17 +1,19 @@
 import React from 'react';
 
-export default () => (
+export default ({
+  polls
+}) => (
   <main>
     <div className='container'>
       <div className='row'>
-        <div className='col s12'>
-          <h1>Main Content!</h1>
-          <h2>Subheading of the page</h2>
-          <p className='flow-text'>
-            This is a paragraph of text with flow-text.
-          </p>
-          <blockquote>This is a blockquote</blockquote>
-          <p>And another paragraph without flow-text</p>
+        <div className='col s12 m8 offset-m2 center'>
+          <h1>Active Polls</h1>
+          <div className='divider'></div>
+          <div className='collection'>
+            {polls.map(x => (
+              <a href='#' className='collection-item'>{x.name}</a>
+            ))}
+          </div>
         </div>
       </div>
     </div>

@@ -16,6 +16,7 @@
   "author": "Joe Smith <joesmith0488@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "classnames": "^2.2.3",
     "express": "^4.13.4",
     "history": "^1.17.0",
     "materialize-css": "^0.97.5",

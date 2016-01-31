@@ -1,9 +1,25 @@
 import React from 'react';
+import classNames from 'classNames';
 
-export default () => (
-  <footer className='page-footer blue'>
+export default ({baseColor}) => (
+  <footer className={classNames('page-footer', baseColor)}>
     <div className='container'>
-
+      <div className='row'>
+        <div className='col s12 m4'>
+          <h5>
+            <a
+               className='white-text'
+               href='http://freecodecamp.com'
+               target='_blank'>freeCodeCamp.com</a>
+          </h5>
+          <p className='white-text'>
+            This project was built as part of the freeCodeCamp.com curriculum.
+          </p>
+          <a href='http://www.freecodecamp.com/challenges/build-a-voting-app'
+            target='_blank'
+            className={classNames('btn', baseColor, 'lighten-3')}>Learn More</a>
+        </div>
+      </div>
     </div>
     <div className='footer-copyright'>
       <div className='container'>
