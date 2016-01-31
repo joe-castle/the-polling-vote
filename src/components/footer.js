@@ -6,13 +6,10 @@ export default ({baseColor}) => (
     <div className='container'>
       <div className='row'>
         <div className='col s12 m4'>
-          <h5>
-            <a
-               className='white-text'
-               href='http://freecodecamp.com'
-               target='_blank'>freeCodeCamp.com</a>
+          <h5 className='grey-text text-lighten-4'>
+            Project Idea
           </h5>
-          <p className='white-text'>
+          <p className='grey-text text-lighten-4'>
             This project was built as part of the freeCodeCamp.com curriculum.
           </p>
           <a href='http://www.freecodecamp.com/challenges/build-a-voting-app'

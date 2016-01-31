@@ -1,8 +1,7 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 
-import App from './containers/app';
-
+import Routes from './routes/react-routes';
 import DevTools from './containers/dev-tools';
 
 const initialState = {
@@ -12,6 +11,13 @@ const initialState = {
     options: {
       yes: 0,
       no: 0
+    }
+  },{
+    submitter: 'jimmybob',
+    name: 'Whats the best way to jump?',
+    options: {
+      'with legs': 0,
+      'with hands': 0
     }
   }],
   users: {
@@ -27,14 +33,14 @@ const store = configureStore(initialState);
 if (process.env.NODE_ENV === 'production') {
   module.exports = () => (
   	<Provider store={store}>
-      <App />
+      <Routes />
   	</Provider>
   );
 } else {
   module.exports = () => (
   	<Provider store={store}>
       <div>
-        <App />
+        <Routes />
         <DevTools />
       </div>
   	</Provider>
