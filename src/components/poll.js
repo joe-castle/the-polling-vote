@@ -12,7 +12,6 @@ export default class Poll extends Component {
     let {polls, params, postVoteOnPoll} = this.props;
     let pollName = formatUrl(params.poll, false)
       , poll = polls.find(x => x.name === pollName)
-      , pollID = polls.findIndex(x => x.name === pollName)
       , options = Object.keys(poll.options)
       , data = {
           labels: options,
@@ -33,25 +32,26 @@ export default class Poll extends Component {
           </div>
         </div>
         <div className='row'>
-          <form className='col s12 m8 offset-m3'>
-            <div className='row center'>
-              <div className='input-field col s12 m6'>
-                <select className='browser-default'
-                  onChange={(e) => this.setState({value: e.target.value})}
-                >
-                  <option selected disabled>Select an option</option>
-                  {options.map((x, i) => (
-                    <option key={i} value={x}>{x}</option>
-                  ))}
-                </select>
-              </div>
-              <div className='input-field col s12 m2'>
-                <button
-                  onClick={() => postVoteOnPoll('hello', pollID, this.state.value)}
-                  type='submit' className='btn'>Submit</button>
-              </div>
-            </div>
-          </form>
+          <div className='input-field col s12 m5 offset-m3'>
+            <select className='browser-default'
+              onChange={(e) => this.setState({value: e.target.value})}
+              defaultValue='select'
+            >
+              <option value='select' disabled>Select an option</option>
+              {options.map((x, i) => (
+                <option key={i} value={x}>{x}</option>
+              ))}
+            </select>
+          </div>
+          <div className='input-field col s12 m2 center'>
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                postVoteOnPoll('hello', poll.id, this.state.value
+              )}}
+              type='submit' className='btn'
+              disabled={!Boolean(this.state.value)}>Submit</button>
+          </div>
         </div>
         <div className='row center'>
           <div className='col s12'>
