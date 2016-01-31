@@ -2,34 +2,43 @@ import React, {cloneElement} from 'react';
 import {connect} from 'react-redux';
 import {Link} from 'react-router';
 
-import ContentWrapper from '../components/content-wrapper';
+import {postVoteOnPoll} from '../actions/poll-actions';
+
+import formatUrl from '../utils/format-url';
 
 export const Polls = ({
   polls,
-  children
+  children,
+  postVoteOnPoll
 }) => {
   let child;
-  if (children) {child = cloneElement(children, {polls})}
+  if (children) {child = cloneElement(children, {polls, postVoteOnPoll})}
   return (
-    <ContentWrapper>
-        {child ||
-          <div className='col s12 m8 offset-m2 center'>
-            <h1>Active Polls</h1>
-            <div className='divider'></div>
-            <div className='collection'>
-              {polls.map((x, i) => (
-                <Link
-                  key={i}
-                  to={`/polls/${x.name}`}
-                  className='collection-item'>{x.name}</Link>
-              ))}
+    <main>
+      {child ||
+        <div className='container'>
+          <div className='row'>
+            <div className='col s12 m8 offset-m2 center'>
+              <h1>Active Polls</h1>
+              <div className='divider'></div>
+              <div className='collection'>
+                {polls.map((x, i) => (
+                  <Link
+                    key={i}
+                    to={`/polls/${formatUrl(x.name, true)}`}
+                    className='collection-item'>{x.name}</Link>
+                ))}
+              </div>
             </div>
           </div>
-        }
-    </ContentWrapper>
+        </div>
+      }
+    </main>
   )
 };
-export default connect(state => ({
+export default connect(
+  state => ({
     polls: state.polls
-  })
+  }),
+  {postVoteOnPoll}
 )(Polls);
