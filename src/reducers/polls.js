@@ -4,13 +4,6 @@ export default (state = [], {
   type, payload, pollID, option
 }) => {
   let index = pollID ? state.findIndex(x=>x.id===pollID) : null;
-
-  if (payload && state.length > 0) {
-    payload.id = state[state.length-1].id + 1;
-  } else if (payload) {
-    payload.id = 1;
-  }
-  
 	switch(type) {
     case types.ADD_POLL:
       return [

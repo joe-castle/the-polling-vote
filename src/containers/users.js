@@ -6,27 +6,26 @@ import {postVoteOnPoll} from '../actions/poll-actions';
 
 import formatUrl from '../utils/format-url';
 
-export const Polls = ({
-  polls,
-  children,
-  postVoteOnPoll
+export const Users = ({
+  users,
+  children
 }) => {
   let child;
-  if (children) {child = cloneElement(children, {polls, postVoteOnPoll})}
+  if (children) {child = cloneElement(children, {users})}
   return (
     <main>
       {child ||
         <div className='container'>
           <div className='row'>
             <div className='col s12 m8 offset-m2 center'>
-              <h1>Active Polls</h1>
+              <h1>Active Users</h1>
               <div className='divider'/>
               <div className='collection'>
-                {polls.map((x, i) => (
+                {Object.keys(users).map((x, i) => (
                   <Link
                     key={i}
-                    to={`/polls/${formatUrl(x.name, true)}`}
-                    className='collection-item'>{x.name}</Link>
+                    to={`/users/${x}`}
+                    className='collection-item'>{x}</Link>
                 ))}
               </div>
             </div>
@@ -35,10 +34,9 @@ export const Polls = ({
       }
     </main>
   )
-};
+}
 export default connect(
   state => ({
-    polls: state.polls
-  }),
-  {postVoteOnPoll}
-)(Polls);
+    users: state.users
+  })
+)(Users);

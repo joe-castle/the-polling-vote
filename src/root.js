@@ -36,7 +36,7 @@ const initialState = {
   users: {
     jimmybob: {
       name: 'Jim',
-      ownPolls: [0]
+      ownPolls: [1, 2, 3]
     }
   }
 }

@@ -6,11 +6,17 @@ export const addPoll = (payload) => ({
   payload
 });
 
-export const postAddPoll = (username, pollID, payload) => (
-  dispatch => {
+export const postAddPoll = (username, payload) => (
+  (dispatch, getState) => {
+    const {polls} = getState();
+    if (polls.length > 0) {
+      payload.id = polls[polls.length-1].id + 1;
+    } else {
+      payload.id = 1;
+    }
     // server access
       dispatch(addPoll(payload));
-      dispatch(addOwnPollID(username, pollID));
+      dispatch(addOwnPollID(username, payload.id));
   }
 );
 
