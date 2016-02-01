@@ -17,10 +17,10 @@ export default class Poll extends Component {
           labels: options,
           datasets: [{
             label: 'Bar chart',
-            fillColor: 'rgba(220,220,220,0.5)',
-            strokeColor: 'rgba(220,220,220,0.8)',
-            highlightFill: 'rgba(220,220,220,0.75)',
-            highlightStroke: 'rgba(220,220,220,1)',
+            fillColor: 'rgba(63,81,181,0.5)',
+            strokeColor: 'rgba(63,81,181,0.8)',
+            highlightFill: 'rgba(63,81,181,0.75)',
+            highlightStroke: 'rgba(63,81,181,1)',
             data: options.map(x => poll.options[x])
           }]
         }
@@ -50,7 +50,7 @@ export default class Poll extends Component {
                 postVoteOnPoll('hello', poll.id, this.state.value
               )}}
               type='submit' className='btn'
-              disabled={!Boolean(this.state.value)}>Submit</button>
+              disabled={!this.state.value}>Submit</button>
           </div>
         </div>
         <div className='row center'>
