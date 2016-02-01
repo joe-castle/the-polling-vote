@@ -1,5 +1,5 @@
 import React from 'react';
-import { Provider } from 'react-redux';
+import {Provider} from 'react-redux';
 
 import Routes from './routes/react-routes';
 import DevTools from './containers/dev-tools';
@@ -23,7 +23,7 @@ const initialState = {
     }
   },{
     id: 3,
-    submitter: 'jimmybob',
+    submitter: 'hayleyhayz',
     name: 'How old are you?',
     options: {
       '0 - 5': 0,
@@ -36,7 +36,11 @@ const initialState = {
   users: {
     jimmybob: {
       name: 'Jim',
-      ownPolls: [1, 2, 3]
+      ownPolls: [1, 2]
+    },
+    hayleyhayz: {
+      name: 'Hayley',
+      ownPolls: [3]
     }
   }
 }
@@ -46,15 +50,15 @@ const store = configureStore(initialState);
 if (process.env.NODE_ENV === 'production') {
   module.exports = () => (
   	<Provider store={store}>
-      <Routes />
+      <Routes/>
   	</Provider>
   );
 } else {
   module.exports = () => (
   	<Provider store={store}>
       <div>
-        <Routes />
-        <DevTools />
+        <Routes/>
+        <DevTools/>
       </div>
   	</Provider>
   );

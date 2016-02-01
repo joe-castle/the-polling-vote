@@ -38,10 +38,10 @@ export const deletePoll = (pollID) => ({
   pollID
 });
 
-export const postDeletePoll = (username, pollID, payload) => (
+export const postDeletePoll = (username, pollID) => (
   dispatch => {
     // server access
-      dispatch(deletePoll(pollID, payload));
+      dispatch(deletePoll(pollID));
       dispatch(deleteOwnPollID(username, pollID));
   }
 );

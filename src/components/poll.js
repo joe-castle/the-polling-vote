@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {Link} from 'react-router';
 import {Bar} from 'react-chartjs';
 
 import formatUrl from '../utils/format-url'
@@ -29,6 +30,9 @@ export default class Poll extends Component {
         <div className='row center'>
           <div className='col s12'>
             <h2>{pollName}</h2>
+            <h5>Submitted by: 
+              <Link to={`/users/${poll.submitter}`}>{poll.submitter}</Link>
+            </h5>
           </div>
         </div>
         <div className='row'>
