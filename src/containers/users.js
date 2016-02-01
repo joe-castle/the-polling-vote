@@ -2,21 +2,13 @@ import React, {cloneElement} from 'react';
 import {connect} from 'react-redux';
 import {Link} from 'react-router';
 
-import {postDeletePoll} from '../actions/poll-actions';
+import {postDeletePoll, postAddPoll} from '../actions/poll-actions';
 
 import formatUrl from '../utils/format-url';
 
-export const Users = ({
-  users,
-  polls,
-  baseColor,
-  postDeletePoll,
-  children
-}) => {
-  let child;
-  if (children) {
-    child = cloneElement(children, {users, polls, baseColor, postDeletePoll})
-  }
+export const Users = (props) => {
+  let child, {users} = props;
+  if (props.children) {child = cloneElement(props.children, {...props});}
   return (
     <main>
       {child ||
@@ -43,7 +35,8 @@ export const Users = ({
 export default connect(
   state => ({
     users: state.users,
-    polls: state.polls
+    polls: state.polls,
+    authedUser: state.authedUser
   }),
-  {postDeletePoll}
+  {postDeletePoll, postAddPoll}
 )(Users);

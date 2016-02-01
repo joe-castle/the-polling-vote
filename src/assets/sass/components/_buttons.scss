@@ -1,0 +1,17 @@
+i.delete {
+  color: #f44336;
+  transition: color 0.3s;
+  &:hover {
+    cursor: pointer;
+    color: #ffcdd2;
+  }
+}
+
+i.mode-edit {
+  color: #4caf50;
+  transition: color 0.2s;
+  &:hover {
+    cursor: pointer;
+    color: #c8e6c9;
+  }
+}

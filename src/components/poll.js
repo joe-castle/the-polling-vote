@@ -13,24 +13,26 @@ export default class Poll extends Component {
     let {polls, params, postVoteOnPoll} = this.props;
     let pollName = formatUrl(params.poll, false)
       , poll = polls.find(x => x.name === pollName)
-      , options = Object.keys(poll.options)
-      , data = {
-          labels: options,
-          datasets: [{
-            label: 'Bar chart',
-            fillColor: 'rgba(63,81,181,0.5)',
-            strokeColor: 'rgba(63,81,181,0.8)',
-            highlightFill: 'rgba(63,81,181,0.75)',
-            highlightStroke: 'rgba(63,81,181,1)',
-            data: options.map(x => poll.options[x])
-          }]
-        }
-    return (
-      <div className='container'>
+      , options, data;
+
+    if (poll) {
+      options = Object.keys(poll.options);
+      data = {
+        labels: options,
+        datasets: [{
+          label: 'Bar chart',
+          fillColor: 'rgba(63,81,181,0.5)',
+          strokeColor: 'rgba(63,81,181,0.8)',
+          highlightFill: 'rgba(63,81,181,0.75)',
+          highlightStroke: 'rgba(63,81,181,1)',
+          data: options.map(x => poll.options[x])
+        }]
+      };
+      return <div className='container'>
         <div className='row center'>
           <div className='col s12'>
             <h2>{pollName}</h2>
-            <h5>Submitted by: 
+            <h5>Submitted by: {' '}
               <Link to={`/users/${poll.submitter}`}>{poll.submitter}</Link>
             </h5>
           </div>
@@ -63,6 +65,15 @@ export default class Poll extends Component {
           </div>
         </div>
       </div>
-    )
+    } else {
+      return <div className='container'>
+        <div className='row center'>
+          <div classNAme='col s12'>
+            <h4>Unable to find the poll:</h4>
+            <h5>{pollName}</h5>
+          </div>
+        </div>
+      </div>
+    }
   }
 };
