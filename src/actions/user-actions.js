@@ -1,15 +1,18 @@
 import * as types from './action-types'
 
-export const addUser = (username, payload) => ({
+import {addAuthedUser} from '../actions/authed-user-actions';
+
+export const addUser = (username, name) => ({
   type: types.ADD_USER,
   username,
-  payload
+  name
 });
 
-export const postAddUser = (username, payload) => (
+export const postAddUser = (payload) => (
   dispatch => {
     // server access
-      dispatch(addUser(username, payload));
+      dispatch(addUser(payload.username, payload.name));
+      dispatch(addAuthedUser(payload.username));
   }
 )
 

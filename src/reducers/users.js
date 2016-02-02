@@ -3,14 +3,17 @@ import _ from 'lodash';
 import * as types from '../actions/action-types';
 
 export default (state = {}, {
-  type, username, payload, pollID
+  type, username, name, pollID
 }) => {
   let newCopy = _.cloneDeep(state[username]);
 	switch(type) {
     case types.ADD_USER:
       return {
         ...state,
-        [username]: payload
+        [username]: {
+          name,
+          ownPolls: []
+        }
       };
     case types.ADD_OWN_POLL_ID:
       newCopy.ownPolls.push(pollID);

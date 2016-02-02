@@ -1,6 +1,5 @@
 import React, {Component, PropTypes} from 'react';
 import {Link} from 'react-router';
-import classNames from 'classNames';
 
 import formatUrl from '../utils/format-url';
 
@@ -89,7 +88,7 @@ export default class User extends Component {
               ))}
             <button
               style={{marginBottom: '15px'}}
-              className={classNames('btn', baseColor)}
+              className={`btn ${baseColor}`}
               type='submit'
               >Submit</button>
             </div>

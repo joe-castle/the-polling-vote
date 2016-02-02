@@ -10,7 +10,7 @@ export default ({baseColor}) => (
           <ul className='right hide-on-med-and-down'>
             <li><Link to='/polls'>Polls</Link></li>
             <li><Link to='/users'>Users</Link></li>
-            <li><a href='#'>Signup</a></li>
+            <li><Link to='/signup'>Signup</Link></li>
             <li><a href='#'>Login</a></li>
           </ul>
         </div>
