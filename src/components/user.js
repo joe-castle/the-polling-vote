@@ -2,7 +2,6 @@ import React, {Component, PropTypes} from 'react';
 import {Link} from 'react-router';
 import classNames from 'classNames';
 
-import {history} from '../routes/react-routes';
 import formatUrl from '../utils/format-url';
 
 export default class User extends Component {
@@ -49,14 +48,7 @@ export default class User extends Component {
       name: this.state.pollName,
       options
     }
-    this.props.postAddPoll(this.props.params.user, payload);
-    Materialize.toast(
-      'Poll succesfully created! Redirecting in 2 seconds.',
-      2000, '',
-      function(name) {
-        this.context.history.push(`/polls/${formatUrl(name, true)}`)
-      }.bind(this, this.state.pollName)
-    );
+    this.props.postAddPoll(this.props.params.user, payload, this.context.history);
     this.setState({pollName: '', options: [1, 2]});
     this.state.options.forEach(x => {
       this.refs[`option${x}`].value = '';

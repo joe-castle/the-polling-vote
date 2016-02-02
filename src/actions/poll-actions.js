@@ -1,12 +1,14 @@
 import * as types from './action-types';
 import {addOwnPollID, deleteOwnPollID} from './user-actions';
 
+import formatUrl from '../utils/format-url';
+
 export const addPoll = (payload) => ({
   type: types.ADD_POLL,
   payload
 });
 
-export const postAddPoll = (username, payload) => (
+export const postAddPoll = (username, payload, history) => (
   (dispatch, getState) => {
     const {polls} = getState();
     if (polls.length > 0) {
@@ -15,8 +17,16 @@ export const postAddPoll = (username, payload) => (
       payload.id = 1;
     }
     // server access
+      // on success
       dispatch(addPoll(payload));
       dispatch(addOwnPollID(username, payload.id));
+      Materialize.toast(
+        'Poll succesfully created! Redirecting in 2 seconds.',
+        2000, '',
+        function() {
+          history.push(`/polls/${formatUrl(payload.name, true)}`)
+        }
+      );
   }
 );
 
