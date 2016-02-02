@@ -1,7 +1,5 @@
 import * as types from './action-types';
 
-import {addAuthedUser} from './authed-user-actions';
-
 export const changePollFormName = (name) => ({
   type: types.CHANGE_POLL_FORM_NAME,
   name

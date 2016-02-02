@@ -20,7 +20,8 @@ export const loginUser = (history) => (
   (dispatch, getState) => {
     const {loginForm} = getState();
     // server access
-      dispatch(addAuthedUser(loginForm.username));
+      // get name from server
+      dispatch(addAuthedUser(loginForm.username, loginForm.name));
       dispatch(clearLoginForm());
       history.push(`/users/${loginForm.username}`);
   }

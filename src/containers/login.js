@@ -49,8 +49,6 @@ Login.contextTypes = {
 };
 
 export default connect(
-  state => ({
-    authedUser: state.authedUser,
-  }),
+  null,
   {loginUser, changeLoginPassword, changeLoginUsername}
 )(Login);

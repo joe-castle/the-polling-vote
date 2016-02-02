@@ -38,7 +38,7 @@ export default connect(
     users: state.users,
     polls: state.polls,
     pollForm: state.pollForm,
-    authedUser: state.authedUser
+    authedUser: state.authedUser.username
   }),
   {postEditPoll, postAddPoll, postDeletePoll, changePollFormName, changePollFormOptions}
 )(Users);

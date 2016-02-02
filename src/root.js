@@ -38,15 +38,16 @@ const initialState = {
   }],
   users: {
     jimmybob: {
-      name: 'Jim',
       ownPolls: [1, 2]
     },
     hayleyhayz: {
-      name: 'Hayley',
       ownPolls: [3]
     }
   },
-  authedUser: 'hayleyhayz'
+  authedUser: {
+    username: 'hayleyhayz',
+    name: 'Hayley'
+  }
 }
 
 const store = configureStore(initialState);

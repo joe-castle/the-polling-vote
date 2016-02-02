@@ -14,7 +14,7 @@ export const postAddUser = (history) => (
     const {signupForm} = getState()
     // server access
       dispatch(addUser(signupForm.username, signupForm.name));
-      dispatch(addAuthedUser(signupForm.username));
+      dispatch(addAuthedUser(signupForm.username, signupForm.name));
       dispatch(clearSignupForm());
       history.push(`/users/${signupForm.username}`)
   }

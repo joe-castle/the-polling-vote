@@ -1,14 +1,23 @@
 import * as types from '../actions/action-types';
 
-export default (state = '', {
+const initialState = {
+  username: '',
+  name: ''
+};
+
+export default (state = initialState, {
   type,
-  username
+  username,
+  name
 }) => {
 	switch(type) {
     case types.ADD_AUTHED_USER:
-      return username;
+      return {
+        username,
+        name
+      };
     case types.REMOVE_AUTHED_USER:
-      return '';
+      return initialState;
 		default:
 			return state;
 	}

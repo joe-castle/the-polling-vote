@@ -56,8 +56,6 @@ Signup.contextTypes = {
 }
 
 export default connect(
-  state => ({
-    authedUser: state.authedUser,
-  }),
+  null,
   {postAddUser, changeSignupName, changeSignupPassword, changeSignupUsername}
 )(Signup);

@@ -16,7 +16,7 @@ export const postAddPoll = (history) => (
 
     let payload = {
       id: pollID,
-      submitter: authedUser,
+      submitter: authedUser.username,
       name: pollForm.name.trim(),
       options: pollForm.options.reduce((x, y) => {
         if (y) {
@@ -32,7 +32,7 @@ export const postAddPoll = (history) => (
     // server access
       // on success
       dispatch(addPoll(payload));
-      dispatch(addOwnPollID(authedUser, pollID));
+      dispatch(addOwnPollID(authedUser.username, pollID));
       dispatch(clearPollForm());
       Materialize.toast(
         'Poll succesfully created! Redirecting...',
@@ -66,7 +66,7 @@ export const postDeletePoll = (pollID) => (
     const {authedUser} = getState();
     // server access
       dispatch(deletePoll(pollID));
-      dispatch(deleteOwnPollID(authedUser, pollID));
+      dispatch(deleteOwnPollID(authedUser.username, pollID));
   }
 );
 
