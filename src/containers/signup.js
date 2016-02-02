@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 
 import {postAddUser} from '../actions/user-actions';
@@ -14,7 +14,7 @@ export const Signup = ({
   changeSignupName,
   changeSignupPassword,
   changeSignupUsername
-}) => (
+}, {history}) => (
   <main>
     <div className='container'>
       <div className='row'>
@@ -24,7 +24,7 @@ export const Signup = ({
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              postAddUser(signupForm);
+              postAddUser(signupForm, history);
             }}
             >
             <div className='input-field'>
@@ -55,6 +55,9 @@ export const Signup = ({
     </div>
   </main>
 );
+Signup.contextTypes = {
+  history: PropTypes.object
+}
 
 export default connect(
   state => ({

@@ -1,10 +1,12 @@
 import * as types from '../actions/action-types';
 
-export default (state = {
+const initialState = {
   username: '',
   name: '',
   password: ''
-}, {
+};
+
+export default (state = initialState, {
   type, value
 }) => {
 	switch(type) {
@@ -23,6 +25,8 @@ export default (state = {
         ...state,
         password: value
       };
+    case types.CLEAR_SIGNUP_FORM:
+      return initialState;
 		default:
 			return state;
 	}

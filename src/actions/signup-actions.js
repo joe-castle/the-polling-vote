@@ -14,3 +14,7 @@ export const changeSignupPassword = (value) => ({
   type: types.CHANGE_SIGNUP_PASSWORD,
   value
 });
+
+export const clearSignupForm = () => ({
+  type: types.CLEAR_SIGNUP_FORM
+})

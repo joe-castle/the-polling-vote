@@ -23,9 +23,7 @@ export const postAddPoll = (username, payload, history) => (
       Materialize.toast(
         'Poll succesfully created! Redirecting in 2 seconds.',
         2000, '',
-        function() {
-          history.push(`/polls/${formatUrl(payload.name, true)}`)
-        }
+        () => history.push(`/polls/${formatUrl(payload.name, true)}`)
       );
   }
 );

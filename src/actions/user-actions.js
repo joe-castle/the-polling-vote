@@ -1,6 +1,7 @@
 import * as types from './action-types'
 
 import {addAuthedUser} from '../actions/authed-user-actions';
+import {clearSignupForm} from '../actions/signup-actions';
 
 export const addUser = (username, name) => ({
   type: types.ADD_USER,
@@ -8,11 +9,13 @@ export const addUser = (username, name) => ({
   name
 });
 
-export const postAddUser = (payload) => (
+export const postAddUser = (payload, history) => (
   dispatch => {
     // server access
       dispatch(addUser(payload.username, payload.name));
       dispatch(addAuthedUser(payload.username));
+      dispatch(clearSignupForm());
+      history.push(`/users/${payload.username}`)
   }
 )
 
