@@ -6,7 +6,8 @@ const initialState = {
 };
 
 export default (state = initialState, {
-  type, value
+  type,
+  value
 }) => {
 	switch(type) {
     case types.CHANGE_LOGIN_USERNAME:

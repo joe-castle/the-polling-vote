@@ -1,8 +1,7 @@
 import React from 'react';
-import classNames from 'classNames';
 
 export default ({baseColor}) => (
-  <footer className={classNames('page-footer', baseColor)}>
+  <footer className={`page-footer ${baseColor}`}>
     <div className='container'>
       <div className='row'>
         <div className='col s12 m4'>
@@ -14,7 +13,7 @@ export default ({baseColor}) => (
           </p>
           <a href='http://www.freecodecamp.com/challenges/build-a-voting-app'
             target='_blank'
-            className={classNames('btn', baseColor, 'lighten-3')}>Learn More</a>
+            className={`btn ${baseColor} lighten-3`}>Learn More</a>
         </div>
       </div>
     </div>

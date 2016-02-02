@@ -3,7 +3,10 @@ import _ from 'lodash';
 import * as types from '../actions/action-types';
 
 export default (state = {}, {
-  type, username, name, pollID
+  type,
+  username,
+  name,
+  pollID
 }) => {
   let newCopy = _.cloneDeep(state[username]);
 	switch(type) {

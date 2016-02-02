@@ -1,7 +1,10 @@
 import * as types from '../actions/action-types';
 
 export default (state = [], {
-  type, payload, pollID, option
+  type,
+  payload,
+  pollID,
+  option
 }) => {
   let index = pollID ? state.findIndex(x=>x.id===pollID) : null;
 	switch(type) {

@@ -46,7 +46,7 @@ export const Login = ({
 );
 Login.contextTypes = {
   history: PropTypes.object
-}
+};
 
 export default connect(
   state => ({

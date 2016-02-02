@@ -66,3 +66,9 @@ export const postVoteOnPoll = (username, pollID, option) => (
       dispatch(voteOnPoll(pollID, option));
   }
 );
+
+export const changeSelectedOption = (pollID, option) => ({
+  type: types.CHANGE_SELECTED_OPTION,
+  pollID,
+  option
+})
