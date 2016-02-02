@@ -1,5 +1,6 @@
 import * as types from './action-types';
 import {addOwnPollID, deleteOwnPollID} from './user-actions';
+import {clearPollForm} from './poll-form-actions';
 
 import formatUrl from '../utils/format-url';
 
@@ -8,21 +9,34 @@ export const addPoll = (payload) => ({
   payload
 });
 
-export const postAddPoll = (username, payload, history) => (
+export const postAddPoll = (history) => (
   (dispatch, getState) => {
-    const {polls} = getState();
-    if (polls.length > 0) {
-      payload.id = polls[polls.length-1].id + 1;
-    } else {
-      payload.id = 1;
+    let {polls, authedUser, pollForm} = getState()
+      , pollID = polls.length > 0 ? polls[polls.length-1].id + 1 : 1;
+
+    let payload = {
+      id: pollID,
+      submitter: authedUser,
+      name: pollForm.name.trim(),
+      options: pollForm.options.reduce((x, y) => {
+        if (y) {
+          return {
+            ...x,
+            [y.trim()]: 0
+          }
+        }
+        return x;
+      }, {}),
+      selectedOption: 'select'
     }
     // server access
       // on success
       dispatch(addPoll(payload));
-      dispatch(addOwnPollID(username, payload.id));
+      dispatch(addOwnPollID(authedUser, pollID));
+      dispatch(clearPollForm());
       Materialize.toast(
-        'Poll succesfully created! Redirecting in 2 seconds.',
-        2000, '',
+        'Poll succesfully created! Redirecting...',
+        1000, '',
         () => history.push(`/polls/${formatUrl(payload.name, true)}`)
       );
   }
@@ -34,8 +48,9 @@ export const editPoll = (pollID, payload) => ({
   payload
 });
 
-export const postEditPoll = (username, pollID, payload) => (
-  dispatch => {
+export const postEditPoll = (pollID, payload) => (
+  (dispatch, getState) => {
+    const {authedUser} = getState();
     // server access
       dispatch(editPoll(pollID, payload));
   }
@@ -46,11 +61,12 @@ export const deletePoll = (pollID) => ({
   pollID
 });
 
-export const postDeletePoll = (username, pollID) => (
-  dispatch => {
+export const postDeletePoll = (pollID) => (
+  (dispatch, getState) => {
+    const {authedUser} = getState();
     // server access
       dispatch(deletePoll(pollID));
-      dispatch(deleteOwnPollID(username, pollID));
+      dispatch(deleteOwnPollID(authedUser, pollID));
   }
 );
 
@@ -60,8 +76,9 @@ export const voteOnPoll = (pollID, option) => ({
   option
 });
 
-export const postVoteOnPoll = (username, pollID, option) => (
-  dispatch => {
+export const postVoteOnPoll = (pollID, option) => (
+  (dispatch, getState) => {
+    const {authedUser} = getState();
     // server access
       dispatch(voteOnPoll(pollID, option));
   }

@@ -5,17 +5,9 @@ import {Link} from 'react-router';
 import {postVoteOnPoll, changeSelectedOption} from '../actions/poll-actions';
 import formatUrl from '../utils/format-url';
 
-export const Polls = ({
-  polls,
-  children,
-  authedUser,
-  postVoteOnPoll,
-  changeSelectedOption
-}) => {
-  let child;
-  if (children) {child = cloneElement(
-    children, {polls, authedUser, postVoteOnPoll, changeSelectedOption}
-  )}
+export const Polls = (props) => {
+  let child, {polls} = props;
+  if (props.children) {child = cloneElement(props.children, {...props});}
   return (
     <main>
       {child ||
@@ -42,7 +34,6 @@ export const Polls = ({
 export default connect(
   state => ({
     polls: state.polls,
-    authedUser: state.authedUser
   }),
   {postVoteOnPoll, changeSelectedOption}
 )(Polls);

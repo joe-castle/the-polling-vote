@@ -7,7 +7,6 @@ import formatUrl from '../utils/format-url'
 export default ({
   polls,
   params,
-  authedUser,
   postVoteOnPoll,
   changeSelectedOption,
 }) => {
@@ -53,7 +52,7 @@ export default ({
           <button
             onClick={(e) => {
               e.preventDefault();
-              postVoteOnPoll(authedUser, poll.id, poll.selectedOption)}}
+              postVoteOnPoll(poll.id, poll.selectedOption)}}
             type='submit' className='btn'
             disabled={poll.selectedOption === 'select'}>Submit</button>
         </div>
@@ -67,7 +66,7 @@ export default ({
   } else {
     return <div className='container'>
       <div className='row center'>
-        <div classNAme='col s12'>
+        <div className='col s12'>
           <h4>Unable to find the poll:</h4>
           <h5>{pollName}</h5>
         </div>

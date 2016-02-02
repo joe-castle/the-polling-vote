@@ -2,7 +2,8 @@ import React, {cloneElement} from 'react';
 import {connect} from 'react-redux';
 import {Link} from 'react-router';
 
-import {postDeletePoll, postAddPoll} from '../actions/poll-actions';
+import {postDeletePoll, postAddPoll, postEditPoll} from '../actions/poll-actions';
+import {changePollFormOptions, changePollFormName} from '../actions/poll-form-actions';
 
 import formatUrl from '../utils/format-url';
 
@@ -36,7 +37,8 @@ export default connect(
   state => ({
     users: state.users,
     polls: state.polls,
+    pollForm: state.pollForm,
     authedUser: state.authedUser
   }),
-  {postDeletePoll, postAddPoll}
+  {postEditPoll, postAddPoll, postDeletePoll, changePollFormName, changePollFormOptions}
 )(Users);
