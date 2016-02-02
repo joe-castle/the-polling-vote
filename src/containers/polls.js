@@ -8,12 +8,13 @@ import formatUrl from '../utils/format-url';
 export const Polls = ({
   polls,
   children,
+  authedUser,
   postVoteOnPoll,
   changeSelectedOption
 }) => {
   let child;
   if (children) {child = cloneElement(
-    children, {polls, postVoteOnPoll, changeSelectedOption}
+    children, {polls, authedUser, postVoteOnPoll, changeSelectedOption}
   )}
   return (
     <main>

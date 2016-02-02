@@ -7,9 +7,9 @@ import formatUrl from '../utils/format-url'
 export default ({
   polls,
   params,
+  authedUser,
   postVoteOnPoll,
   changeSelectedOption,
-  authedUser
 }) => {
   let pollName = formatUrl(params.poll, false)
     , poll = polls.find(x => x.name === pollName)
