@@ -14,6 +14,7 @@ import Poll from '../components/poll';
 import Users from '../containers/users';
 import User from '../components/user';
 import Signup from '../containers/signup';
+import Login from '../containers/login';
 
 export default () => (
   <Router history={browserHistory}>
@@ -26,6 +27,7 @@ export default () => (
         <Route path=':user' component={User}/>
       </Route>
       <Route path='signup' component={Signup}/>
+      <Route path='login' component={Login}/>
     </Route>
   </Router>
 );

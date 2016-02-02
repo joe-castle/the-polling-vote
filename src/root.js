@@ -43,7 +43,7 @@ const initialState = {
       ownPolls: [3]
     }
   },
-  authedUser: 'hayleyhayz'
+  authedUser: ''
 }
 
 const store = configureStore(initialState);
