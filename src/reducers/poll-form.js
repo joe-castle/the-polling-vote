@@ -1,6 +1,7 @@
 import * as types from '../actions/action-types';
 
 const initialState = {
+  formType: 'Add',
   name: '',
   options: ['', '']
 };
@@ -10,14 +11,25 @@ export default (state = initialState, {
   name,
   value,
   index,
-  options
+  options,
+  formType
 }) => {
 	switch(type) {
+    case types.CHANGE_POLL_FORM_TYPE:
+      return {
+        ...state,
+        formType
+      }
     case types.CHANGE_POLL_FORM_NAME:
       return {
         ...state,
         name
       };
+    case types.INSERT_POLL_FORM_OPTIONS:
+      return {
+        ...state,
+        options
+      }
     case types.CHANGE_POLL_FORM_OPTION:
       return {
         ...state,

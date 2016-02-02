@@ -1,9 +1,32 @@
 import * as types from './action-types';
 
+export const changePollFormType = (formType) => ({
+  type: types.CHANGE_POLL_FORM_TYPE,
+  formType
+});
+
 export const changePollFormName = (name) => ({
   type: types.CHANGE_POLL_FORM_NAME,
   name
 });
+
+export const insertPollFormOptions = (options) => ({
+  type: types.INSERT_POLL_FORM_OPTIONS,
+  options
+});
+
+export const insertPollForm = (pollID, formType) => (
+  (dispatch, getState) => {
+    let {polls} = getState()
+      , poll = polls.find(x => x.id === pollID)
+      , options = Object.keys(poll.options);
+    options.push('');
+
+    dispatch(changePollFormType(formType));
+    dispatch(changePollFormName(poll.name));
+    dispatch(insertPollFormOptions(options));
+  }
+);
 
 export const changePollFormOptions = (value, index) => (
   (dispatch, getState) => {

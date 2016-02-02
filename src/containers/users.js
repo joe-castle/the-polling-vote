@@ -3,7 +3,10 @@ import {connect} from 'react-redux';
 import {Link} from 'react-router';
 
 import {postDeletePoll, postAddPoll, postEditPoll} from '../actions/poll-actions';
-import {changePollFormOptions, changePollFormName} from '../actions/poll-form-actions';
+import {
+  changePollFormOptions,
+  changePollFormName,
+  insertPollForm} from '../actions/poll-form-actions';
 
 import formatUrl from '../utils/format-url';
 
@@ -40,5 +43,6 @@ export default connect(
     pollForm: state.pollForm,
     authedUser: state.authedUser.username
   }),
-  {postEditPoll, postAddPoll, postDeletePoll, changePollFormName, changePollFormOptions}
+  {postEditPoll, postAddPoll, postDeletePoll,
+    changePollFormName, changePollFormOptions, insertPollForm}
 )(Users);

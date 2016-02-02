@@ -13,6 +13,7 @@ export const User = ({
   postAddPoll,
   postEditPoll,
   postDeletePoll,
+  insertPollForm,
   changePollFormName,
   changePollFormOptions
 }, {history}) => (
@@ -25,15 +26,21 @@ export const User = ({
         {authedUser === params.user &&
         <form onSubmit={(e) => {
             e.preventDefault();
-            postAddPoll(history);
+            if (pollForm.formType === 'Add') {
+              postAddPoll(history);
+            } else {
+              postEditPoll(history);
+            }
           }}>
-          <h4>New Poll</h4>
+          <h4>{pollForm.formType} Poll</h4>
           <div className='input-field'>
             <input
               onChange={(e) => changePollFormName(e.target.value)}
+              value={pollForm.name}
               type='text'
               placeholder='Poll Name'
               className='validate'
+              disabled={pollForm.formType === 'Edit'}
               required
             />
           </div>
@@ -42,6 +49,7 @@ export const User = ({
               <input
                 key={i}
                 onChange={(e) => changePollFormOptions(e.target.value, i)}
+                value={x}
                 type='text'
                 placeholder={`Option #${i+1}`}
                 className='validate'
@@ -78,7 +86,7 @@ export const User = ({
                   <a
                     onClick={(e) => {
                       e.preventDefault();
-                      postEditPoll(poll.id);
+                      insertPollForm(poll.id, 'Edit');
                     }}
                     className='secondary-content'
                   >
