@@ -12,7 +12,8 @@ const initialState = {
     options: {
       yes: 0,
       no: 0
-    }
+    },
+    selectedOption: ''
   },{
     id: 2,
     submitter: 'jimmybob',
@@ -20,7 +21,8 @@ const initialState = {
     options: {
       'with legs': 0,
       'with hands': 0
-    }
+    },
+    selectedOption: ''
   },{
     id: 3,
     submitter: 'hayleyhayz',
@@ -31,7 +33,8 @@ const initialState = {
       '12 - 17': 0,
       '18 - 24': 0,
       '25+': 0
-    }
+    },
+    selectedOption: ''
   }],
   users: {
     jimmybob: {

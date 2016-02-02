@@ -21,6 +21,15 @@ export default (state = [], {
         payload,
         ...state.slice(index+1)
       ];
+    case types.CHANGE_SELECTED_OPTION:
+      return [
+        ...state.slice(0, index),
+        {
+          ...state[index],
+          selectedOption: option
+        },
+        ...state.slice(index+1)
+      ]
     case types.VOTE_ON_POLL:
       return [
         ...state.slice(0, index),

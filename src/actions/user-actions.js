@@ -9,13 +9,14 @@ export const addUser = (username, name) => ({
   name
 });
 
-export const postAddUser = (payload, history) => (
-  dispatch => {
+export const postAddUser = (history) => (
+  (dispatch, getState) => {
+    const {signupForm} = getState()
     // server access
-      dispatch(addUser(payload.username, payload.name));
-      dispatch(addAuthedUser(payload.username));
+      dispatch(addUser(signupForm.username, signupForm.name));
+      dispatch(addAuthedUser(signupForm.username));
       dispatch(clearSignupForm());
-      history.push(`/users/${payload.username}`)
+      history.push(`/users/${signupForm.username}`)
   }
 )
 

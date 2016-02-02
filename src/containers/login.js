@@ -10,7 +10,6 @@ import {
 export const Login = ({
   baseColor,
   loginUser,
-  loginForm,
   changeLoginPassword,
   changeLoginUsername
 }, {history}) => (
@@ -23,20 +22,18 @@ export const Login = ({
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              loginUser(loginForm, history);
+              loginUser(history);
             }}
             >
             <div className='input-field'>
               <input
                 onChange={(e) => changeLoginUsername(e.target.value)}
-                value={loginForm.username}
                 id='username' type='text' className='validate' required/>
               <label htmlFor='username'>Username</label>
             </div>
             <div className='input-field'>
               <input
                 onChange={(e) => changeLoginPassword(e.target.value)}
-                value={loginForm.password}
                 id='password' type='password' className='validate' required/>
               <label htmlFor='password'>Password</label>
             </div>
@@ -54,7 +51,6 @@ Login.contextTypes = {
 export default connect(
   state => ({
     authedUser: state.authedUser,
-    loginForm: state.loginForm
   }),
   {loginUser, changeLoginPassword, changeLoginUsername}
 )(Login);
