@@ -8,16 +8,17 @@ import {removeAuthedUser} from '../actions/authed-user-actions';
 const Navbar = ({
   name,
   username,
+  location,
   baseColor,
   removeAuthedUser
-}, {location}) => (
+}) => (
   <header>
     <nav className={baseColor}>
       <div className='container'>
         <div className='nav-wrapper'>
           <Link to='/' className='left brand-logo'>The Polling Vote</Link>
           <ul className='right hide-on-med-and-down'>
-            <li className={classNames({active: /\/polls/i.test(location.pathname)})}>
+            <li className={classNames({active: /\/polls|^\/$/i.test(location.pathname)})}>
               <Link to='/polls'>Polls</Link>
             </li>
             <li className={classNames({active: /\/users/i.test(location.pathname)})}>
@@ -41,9 +42,6 @@ const Navbar = ({
     </nav>
   </header>
 );
-Navbar.contextTypes = {
-  location: PropTypes.object
-}
 
 export default connect(
   state => ({

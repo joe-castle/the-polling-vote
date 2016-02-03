@@ -8,12 +8,13 @@ import {
   changeSignupPassword} from '../actions/signup-actions';
 
 export const Signup = ({
+  history,
   baseColor,
   postAddUser,
   changeSignupName,
   changeSignupPassword,
   changeSignupUsername
-}, {history}) => (
+}) => (
   <main>
     <div className='container'>
       <div className='row'>
@@ -51,9 +52,6 @@ export const Signup = ({
     </div>
   </main>
 );
-Signup.contextTypes = {
-  history: PropTypes.object
-}
 
 export default connect(
   null,

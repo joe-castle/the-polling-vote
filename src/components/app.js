@@ -4,12 +4,13 @@ import Navbar from '../components/navbar';
 import Footer from '../components/footer';
 
 export default ({
-  children
+  children,
+  location
 }) => {
   let baseColor = 'indigo';
   return (
     <div className='wrapper'>
-      <Navbar baseColor={baseColor}/>
+      <Navbar location={location} baseColor={baseColor}/>
       {cloneElement(children, {baseColor})}
       <Footer baseColor={baseColor}/>
     </div>

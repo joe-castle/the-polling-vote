@@ -8,11 +8,12 @@ import {
   loginUser} from '../actions/login-actions';
 
 export const Login = ({
+  history,
   baseColor,
   loginUser,
   changeLoginPassword,
   changeLoginUsername
-}, {history}) => (
+}) => (
   <main>
     <div className='container'>
       <div className='row'>
@@ -44,9 +45,6 @@ export const Login = ({
     </div>
   </main>
 );
-Login.contextTypes = {
-  history: PropTypes.object
-};
 
 export default connect(
   null,

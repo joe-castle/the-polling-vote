@@ -3,10 +3,11 @@ import {Link} from 'react-router';
 
 import formatUrl from '../utils/format-url';
 
-export const User = ({
+export default ({
   users,
   polls,
   params,
+  history,
   pollForm,
   baseColor,
   authedUser,
@@ -16,7 +17,7 @@ export const User = ({
   insertPollForm,
   changePollFormName,
   changePollFormOptions
-}, {history}) => (
+}) => (
   <div className='container'>
     <div className='row'>
       <div className='col s12 m8 offset-m2'>
@@ -101,8 +102,3 @@ export const User = ({
     </div>
   </div>
 );
-User.contextTypes = {
-  history: PropTypes.object
-};
-
-export default User;

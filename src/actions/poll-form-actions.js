@@ -34,12 +34,13 @@ export const changePollFormOptions = (value, index) => (
 
     if (pollForm.options.length >= 2 && value && index === pollForm.options.length - 1) {
       dispatch(addPollFormOptionsInput());
-    }
-    if (pollForm.options.length > 2 && !value) {
+      dispatch(changePollFormOption(value, index));
+    } else if (pollForm.options.length > 2 && !value) {
       dispatch(removePollFormOptionsInput(index));
+    } else {
+      dispatch(changePollFormOption(value, index));
     }
 
-    dispatch(changePollFormOption(value, index));
   }
 );
 
