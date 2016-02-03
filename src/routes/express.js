@@ -3,7 +3,11 @@
 import bodyParser from 'body-parser';
 import express from 'express';
 
-import {addPoll} from '../actions/poll-actions';
+import {
+  addPoll,
+  editPoll,
+  deletePoll} from '../actions/poll-actions';
+import {deleteOwnPollID} from '../actions/user-actions';
 
 const app = express();
 
@@ -14,31 +18,41 @@ export default ({dispatch, getState}) => {
 
   app.route('/api/polls')
     .get((req, res) => {
-      res.json(getState())
+      res.json(getState());
     })
     .post((req, res) => {
       let {polls} = getState()
-        , exists = polls.find(x => x.name === req.body.name);
+        , exists = polls.find(x => x.name === req.body.name)
+        , id = polls.length > 0 ? polls[polls.length-1].id + 1 : 1
+        , responseBody = {
+          id,
+          ...req.body
+        };
 
       if (exists) {
         res.status(409).send('A poll with that name already exists, please try again.');
       } else {
-        dispatch(addPoll(req.body));
-        res.status(201).json(req.body);
+        dispatch(addPoll(responseBody));
+        res.status(201).json(responseBody);
       }
     })
     .put((req, res) => {
-
+      dispatch(editPoll(req.body.id, req.body))
+      res.json(req.body);
     })
     .delete((req, res) => {
-
+      let {id, user} = req.body;
+      console.log(req.body);
+      dispatch(deletePoll(id));
+      dispatch(deleteOwnPollID(user, id));
+      res.sendStatus(200);
     })
 
-  app.post('/login', (req, res) => {
+  app.post('api/login', (req, res) => {
 
   });
 
-  app.post('/signup', (req, res) => {
+  app.post('api/signup', (req, res) => {
 
   });
   return app;

@@ -1,5 +1,4 @@
-export default (id, username, name, options, currentOptions) => ({
-  id: id,
+export default (username, name, options, currentOptions) => ({
   submitter: username,
   name: name.trim(),
   options: options.reduce((x, y) => {

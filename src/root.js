@@ -19,7 +19,8 @@ $.ajax({
   success: (res) => {
     initialState = {
       ...initialState,
-      res
+      polls: res.polls,
+      users: res.users
     }
   }
 });

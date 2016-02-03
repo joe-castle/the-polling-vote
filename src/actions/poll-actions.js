@@ -14,10 +14,9 @@ export const addPoll = (payload) => ({
 export const postAddPoll = (history) => (
   (dispatch, getState) => {
     let {polls, authedUser, pollForm} = getState()
-      , pollID = polls.length > 0 ? polls[polls.length-1].id + 1 : 1;
 
     let payload = createPayload(
-      pollID, authedUser.username, pollForm.name, pollForm.options, {}
+      authedUser.username, pollForm.name, pollForm.options, {}
     );
     ajax('POST', '/api/polls', payload)
       .done(res => {
@@ -46,17 +45,22 @@ export const postEditPoll = (history) => (
   (dispatch, getState) => {
     let {authedUser, pollForm, polls} = getState()
       , {id, options} = polls.find(x => x.name === pollForm.name)
-      , payload = createPayload(
-          id, authedUser.username, pollForm.name, pollForm.options, options
+      , payload = {
+          id,
+          ...createPayload(
+            authedUser.username, pollForm.name, pollForm.options, options
+          )
+        }
+    ajax('PUT', '/api/polls', payload)
+      .done(res => {
+        dispatch(editPoll(payload.id, payload));
+        dispatch(clearPollForm());
+        Materialize.toast(
+          'Poll succesfully edited! Redirecting...',
+          1000, '',
+          () => history.push(`/polls/${formatUrl(payload.name, true)}`)
         );
-    // server access
-      dispatch(editPoll(payload.id, payload));
-      dispatch(clearPollForm());
-      Materialize.toast(
-        'Poll succesfully edited! Redirecting...',
-        1000, '',
-        () => history.push(`/polls/${formatUrl(payload.name, true)}`)
-      );
+      })
   }
 );
 
@@ -68,9 +72,16 @@ export const deletePoll = (pollID) => ({
 export const postDeletePoll = (pollID) => (
   (dispatch, getState) => {
     const {authedUser} = getState();
-    // server access
-      dispatch(deletePoll(pollID));
-      dispatch(deleteOwnPollID(authedUser.username, pollID));
+    $.ajax({
+      type: 'DELETE',
+      url: '/api/polls',
+      contentType: 'application/json',
+      data: JSON.stringify({id: pollID, user: authedUser.username}),
+      success: (res) => {
+        dispatch(deleteOwnPollID(authedUser.username, pollID));
+        dispatch(deletePoll(pollID));
+      }
+    });
   }
 );
 
