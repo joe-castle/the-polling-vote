@@ -3,22 +3,8 @@ import {addOwnPollID, deleteOwnPollID} from './user-actions';
 import {clearPollForm} from './poll-form-actions';
 
 import formatUrl from '../utils/format-url';
-
-const createPayload = (id, username, name, options, currentOptions) => ({
-  id: id,
-  submitter: username,
-  name: name.trim(),
-  options: options.reduce((x, y) => {
-    if (y) {
-      return {
-        ...x,
-        [y.trim()]: currentOptions[y.trim()] || 0
-      }
-    }
-    return x;
-  }, {}),
-  selectedOption: 'select'
-})
+import createPayload from '../utils/create-payload';
+import ajax from '../utils/ajax';
 
 export const addPoll = (payload) => ({
   type: types.ADD_POLL,
@@ -33,16 +19,20 @@ export const postAddPoll = (history) => (
     let payload = createPayload(
       pollID, authedUser.username, pollForm.name, pollForm.options, {}
     );
-    // server access
-      // on success
-      dispatch(addPoll(payload));
-      dispatch(addOwnPollID(authedUser.username, pollID));
-      dispatch(clearPollForm());
-      Materialize.toast(
-        'Poll succesfully created! Redirecting...',
-        1000, '',
-        () => history.push(`/polls/${formatUrl(payload.name, true)}`)
-      );
+    ajax('POST', '/api/polls', payload)
+      .done(res => {
+        dispatch(addPoll(res));
+        dispatch(addOwnPollID(authedUser.username, res.id));
+        dispatch(clearPollForm());
+        Materialize.toast(
+          'Poll succesfully created! Redirecting...',
+          1000, '',
+          () => history.push(`/polls/${formatUrl(payload.name, true)}`)
+        );
+      })
+      .fail(err => {
+        Materialize.toast(err.responseText, 4000);
+      });
   }
 );
 
