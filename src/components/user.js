@@ -13,8 +13,10 @@ export default ({
   authedUser,
   postAddPoll,
   postEditPoll,
+  clearPollForm,
   postDeletePoll,
   insertPollForm,
+  changePollFormType,
   changePollFormName,
   changePollFormOptions
 }) => (
@@ -24,6 +26,17 @@ export default ({
         <div className='center'>
           <h1 className='center'>{params.user}</h1>
         </div>
+        {pollForm.formType === 'Edit' &&
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              changePollFormType('Add');
+              clearPollForm();
+            }}
+            type='button' className={`btn ${baseColor}`}>
+            Add Poll
+          </button>
+        }
         {authedUser === params.user &&
         <form onSubmit={(e) => {
             e.preventDefault();

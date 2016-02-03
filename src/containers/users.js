@@ -6,7 +6,9 @@ import {postDeletePoll, postAddPoll, postEditPoll} from '../actions/poll-actions
 import {
   changePollFormOptions,
   changePollFormName,
-  insertPollForm} from '../actions/poll-form-actions';
+  changePollFormType,
+  insertPollForm,
+  clearPollForm} from '../actions/poll-form-actions';
 
 import formatUrl from '../utils/format-url';
 
@@ -44,5 +46,6 @@ export default connect(
     authedUser: state.authedUser.username
   }),
   {postEditPoll, postAddPoll, postDeletePoll,
-    changePollFormName, changePollFormOptions, insertPollForm}
+    changePollFormName, changePollFormOptions,
+    changePollFormType, clearPollForm, insertPollForm}
 )(Users);
