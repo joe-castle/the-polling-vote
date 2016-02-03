@@ -16,10 +16,12 @@
   "author": "Joe Smith <joesmith0488@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "body-parser": "^1.14.2",
     "chart.js": "^1.0.2",
     "classnames": "^2.2.3",
     "express": "^4.13.4",
     "history": "^1.17.0",
+    "jquery": "^2.2.0",
     "materialize-css": "^0.97.5",
     "react": "^0.14.7",
     "react-chartjs": "^0.7.3",

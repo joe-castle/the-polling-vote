@@ -14,6 +14,8 @@ let entry, cssLoaders, jsLoaders = ['babel']
       // See /src/frontend/root.js.
       Root: './root',
       configureStore: './store/configure-store'
+      // Currently using a CDN because materialize is being janky
+      // $: 'jquery'
     }),
     new HtmlWebpackPlugin({
       // Change the title for new projects
