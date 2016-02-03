@@ -6,6 +6,7 @@ import express from 'express';
 import {
   addPoll,
   editPoll,
+  voteOnPoll,
   deletePoll} from '../actions/poll-actions';
 import {deleteOwnPollID} from '../actions/user-actions';
 
@@ -22,7 +23,7 @@ export default ({dispatch, getState}) => {
     })
     .post((req, res) => {
       let {polls} = getState()
-        , exists = polls.find(x => x.name === req.body.name)
+        , exists = polls.find(x => x.name.toLowerCase() === req.body.name.toLowerCase())
         , id = polls.length > 0 ? polls[polls.length-1].id + 1 : 1
         , responseBody = {
           id,
@@ -37,22 +38,26 @@ export default ({dispatch, getState}) => {
       }
     })
     .put((req, res) => {
-      dispatch(editPoll(req.body.id, req.body))
+      let {type, pollID, payload, option} = req.body
+      if (type === 'edit') {
+        dispatch(editPoll(payload.id, payload))
+      } else if (type === 'vote') {
+        dispatch(voteOnPoll(pollID, option));
+      }
       res.json(req.body);
     })
     .delete((req, res) => {
-      let {id, user} = req.body;
-      console.log(req.body);
-      dispatch(deletePoll(id));
-      dispatch(deleteOwnPollID(user, id));
-      res.sendStatus(200);
+      let {pollID, user} = req.body;
+      dispatch(deletePoll(pollID));
+      dispatch(deleteOwnPollID(user, pollID));
+      res.json(req.body);
     })
 
-  app.post('api/login', (req, res) => {
+  app.post('/api/login', (req, res) => {
 
   });
 
-  app.post('api/signup', (req, res) => {
+  app.post('/api/signup', (req, res) => {
 
   });
   return app;

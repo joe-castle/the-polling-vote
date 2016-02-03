@@ -1,4 +1,4 @@
-export default (type, url, payload, dataType = 'json') => (
+export default (type, payload, url = '/api/polls', dataType = 'json') => (
   $.ajax({
     type: type,
     url: url,

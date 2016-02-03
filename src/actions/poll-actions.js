@@ -11,6 +11,29 @@ export const addPoll = (payload) => ({
   payload
 });
 
+export const editPoll = (pollID, payload) => ({
+  type: types.EDIT_POLL,
+  pollID,
+  payload
+});
+
+export const deletePoll = (pollID) => ({
+  type: types.DELETE_POLL,
+  pollID
+});
+
+export const voteOnPoll = (pollID, option) => ({
+  type: types.VOTE_ON_POLL,
+  pollID,
+  option
+});
+
+export const changeSelectedOption = (pollID, option) => ({
+  type: types.CHANGE_SELECTED_OPTION,
+  pollID,
+  option
+});
+
 export const postAddPoll = (history) => (
   (dispatch, getState) => {
     let {polls, authedUser, pollForm} = getState()
@@ -18,7 +41,7 @@ export const postAddPoll = (history) => (
     let payload = createPayload(
       authedUser.username, pollForm.name, pollForm.options, {}
     );
-    ajax('POST', '/api/polls', payload)
+    ajax('POST', payload)
       .done(res => {
         dispatch(addPoll(res));
         dispatch(addOwnPollID(authedUser.username, res.id));
@@ -35,12 +58,6 @@ export const postAddPoll = (history) => (
   }
 );
 
-export const editPoll = (pollID, payload) => ({
-  type: types.EDIT_POLL,
-  pollID,
-  payload
-});
-
 export const postEditPoll = (history) => (
   (dispatch, getState) => {
     let {authedUser, pollForm, polls} = getState()
@@ -51,7 +68,7 @@ export const postEditPoll = (history) => (
             authedUser.username, pollForm.name, pollForm.options, options
           )
         }
-    ajax('PUT', '/api/polls', payload)
+    ajax('PUT', {payload, type:'edit'})
       .done(res => {
         dispatch(editPoll(payload.id, payload));
         dispatch(clearPollForm());
@@ -60,47 +77,29 @@ export const postEditPoll = (history) => (
           1000, '',
           () => history.push(`/polls/${formatUrl(payload.name, true)}`)
         );
-      })
+      });
   }
 );
-
-export const deletePoll = (pollID) => ({
-  type: types.DELETE_POLL,
-  pollID
-});
 
 export const postDeletePoll = (pollID) => (
   (dispatch, getState) => {
     const {authedUser} = getState();
-    $.ajax({
-      type: 'DELETE',
-      url: '/api/polls',
-      contentType: 'application/json',
-      data: JSON.stringify({id: pollID, user: authedUser.username}),
-      success: (res) => {
+    ajax('DELETE', {pollID, user:authedUser.username})
+      .done(res => {
         dispatch(deleteOwnPollID(authedUser.username, pollID));
         dispatch(deletePoll(pollID));
-      }
-    });
+        Materialize.toast('Poll succesfully deleted!', 4000);
+      });
   }
 );
-
-export const voteOnPoll = (pollID, option) => ({
-  type: types.VOTE_ON_POLL,
-  pollID,
-  option
-});
 
 export const postVoteOnPoll = (pollID, option) => (
   (dispatch, getState) => {
     const {authedUser} = getState();
-    // server access
-      dispatch(voteOnPoll(pollID, option));
+    ajax('PUT', {pollID, option, type: 'vote'})
+      .done(res => {
+        dispatch(voteOnPoll(pollID, option));
+        Materialize.toast(`Thanks for voting for '${option}'!`, 4000);
+      });
   }
 );
-
-export const changeSelectedOption = (pollID, option) => ({
-  type: types.CHANGE_SELECTED_OPTION,
-  pollID,
-  option
-})
