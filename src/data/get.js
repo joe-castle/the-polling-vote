@@ -1,8 +1,8 @@
 'use strict';
 
-const client = require('./client');
+import client from './client';
 
-module.exports = (
+export default (
   client.getAsync('state')
     .then(res => (JSON.parse(res) || {}))
 );

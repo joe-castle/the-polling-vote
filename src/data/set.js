@@ -1,8 +1,7 @@
 'use strict';
 
-const client = require('./client');
-const dbGet = require('./get');
+import client from './client';
 
-module.exports = (state) => (
-  client.set('state', JSON.stringify(data))
+export default (state) => (
+  client.set('state', JSON.stringify(state))
 );
