@@ -4,7 +4,7 @@ import {clearPollForm} from './poll-form-actions';
 
 import formatUrl from '../utils/format-url';
 
-const createPayload = (id, username, name, options) => ({
+const createPayload = (id, username, name, options, currentOptions) => ({
   id: id,
   submitter: username,
   name: name.trim(),
@@ -12,7 +12,7 @@ const createPayload = (id, username, name, options) => ({
     if (y) {
       return {
         ...x,
-        [y.trim()]: 0
+        [y.trim()]: currentOptions[y.trim()] || 0
       }
     }
     return x;
@@ -31,7 +31,7 @@ export const postAddPoll = (history) => (
       , pollID = polls.length > 0 ? polls[polls.length-1].id + 1 : 1;
 
     let payload = createPayload(
-      pollID, authedUser.username, pollForm.name, pollForm.options
+      pollID, authedUser.username, pollForm.name, pollForm.options, {}
     );
     // server access
       // on success
@@ -55,9 +55,9 @@ export const editPoll = (pollID, payload) => ({
 export const postEditPoll = (history) => (
   (dispatch, getState) => {
     let {authedUser, pollForm, polls} = getState()
-      , {id} = polls.find(x => x.name === pollForm.name)
+      , {id, options} = polls.find(x => x.name === pollForm.name)
       , payload = createPayload(
-          id, authedUser.username, pollForm.name, pollForm.options
+          id, authedUser.username, pollForm.name, pollForm.options, options
         );
     // server access
       dispatch(editPoll(payload.id, payload));
