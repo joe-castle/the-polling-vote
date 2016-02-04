@@ -2,7 +2,7 @@
 
 import client from './client';
 
-export default (
-  client.getAsync('state')
+export default (dbString) => (
+  client.getAsync(dbString)
     .then(res => (JSON.parse(res) || {}))
 );

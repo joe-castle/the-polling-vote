@@ -13,8 +13,8 @@ import {deleteOwnPollID} from '../actions/user-actions';
 const app = express();
 
 export default ({dispatch, getState}) => {
-  app.use('/api/', bodyParser.json());
-  app.use('/', express.static(`${__dirname}/../public`));
+  app.use(express.static(`${__dirname}/../public`));
+  app.use(bodyParser.json());
   // app.get('*', (req, res) => res.sendFile(`${__dirname}/../public/index.html`));
 
   app.route('/api/polls')
@@ -53,11 +53,11 @@ export default ({dispatch, getState}) => {
       res.json(req.body);
     })
 
-  app.post('/api/login', (req, res) => {
+  app.post('/login', (req, res) => {
 
   });
 
-  app.post('/api/signup', (req, res) => {
+  app.post('/signup', (req, res) => {
 
   });
   return app;

@@ -2,6 +2,6 @@
 
 import client from './client';
 
-export default (state) => (
-  client.set('state', JSON.stringify(state))
+export default (dbString, state) => (
+  client.set(dbString, JSON.stringify(state))
 );
