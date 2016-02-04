@@ -24,7 +24,7 @@ app.route('/api/polls')
           res.status(409).send('A poll with that name already exists, please try again.');
         } else {
           let poll = createPoll(req.body.pollName, req.body.options, {})
-          poll.submitter = 'hayleyhayz'
+          poll.submitter = 'joesmith'
           polls.set(poll.name, poll);
           res.status(201).json(poll);
         }
@@ -58,7 +58,10 @@ app.put('/api/polls/vote', (req, res) => {
 app.get('/api/users', (req, res) => {
   users.getAll()
     .then(users => {
-      if (users) {users = users.map(x => ({username: x.username, name: x.name}))}
+      if (users) {users = users.map(x => ({
+        username: x.username,
+        ownPolls: x.ownPolls
+      }))}
       res.json(users || {'no-data': 'No active users found'})
     });
 });
@@ -76,6 +79,7 @@ app.post('/signup', (req, res) => {
         const user = {
           username: req.body.username,
           name: req.body.name,
+          ownPolls: [],
           password: req.body.password
         }
         users.set(req.body.username, user);

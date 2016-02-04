@@ -1,36 +1,46 @@
-import _ from 'lodash';
-
 import * as types from '../actions/action-types';
 
-export default (state = {}, {
+export default (state = [], {
   type,
-  name,
   username,
   pollName
 }) => {
-  let newCopy = _.cloneDeep(state[username]);
+  let index = state.findIndex(x => x.username === username)
+  let pollIndex;
+  if (index > -1) {pollIndex = state[index].ownPolls.findIndex(x => x === pollName)}
 	switch(type) {
     case types.ADD_USER:
-      return {
-        ...state,
-        [username]: {
-          name,
-          ownPolls: []
-        }
-      };
+     return [
+       ...state,
+       {
+         username,
+         ownPolls: []
+       }
+     ];
     case types.ADD_OWN_POLL:
-      newCopy.ownPolls.push(pollName);
-      return {
-        ...state,
-        [username]: newCopy
-      }
+      return [
+        ...state.slice(0, index),
+        {
+          ...state[index],
+          ownPolls: [
+            ...state[index].ownPolls,
+            pollName
+          ]
+        },
+        ...state.slice(index + 1)
+      ];
     case types.DELETE_OWN_POLL:
-      let i = newCopy.ownPolls.findIndex(x => x === pollName);
-      newCopy.ownPolls.splice(i, 1);
-      return {
-        ...state,
-        [username]: newCopy
-      }
+      return [
+        ...state.slice(0, index),
+        {
+          ...state[index],
+          ownPolls: [
+            ...state[index].ownPolls.slice(0, pollIndex),
+            ...state[index].ownPolls.slice(pollIndex + 1)
+          ]
+        },
+        ...state.slice(index + 1)
+      ];
 		default:
 			return state;
 	}
