@@ -7,10 +7,10 @@ import {removeAuthedUser} from '../actions/authed-user-actions';
 
 const Navbar = ({
   name,
+  dispatch,
   username,
   location,
   baseColor,
-  removeAuthedUser
 }) => (
   <header>
     <nav className={baseColor}>
@@ -34,7 +34,7 @@ const Navbar = ({
               <Link to={`/users/${username}`}>{`Hello ${name}`}</Link>
             </li>
             <li>
-              <Link onClick={() => removeAuthedUser()} to='/'>Logout</Link>
+              <Link onClick={() => dispatch(removeAuthedUser())} to='/'>Logout</Link>
             </li></span>}
           </ul>
         </div>
@@ -48,6 +48,5 @@ export default connect(
     users: state.users,
     username: state.authedUser.username,
     name: state.authedUser.name
-  }),
-  {removeAuthedUser}
+  })
 )(Navbar);

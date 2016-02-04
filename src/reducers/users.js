@@ -4,9 +4,9 @@ import * as types from '../actions/action-types';
 
 export default (state = {}, {
   type,
-  username,
   name,
-  pollID
+  username,
+  pollName
 }) => {
   let newCopy = _.cloneDeep(state[username]);
 	switch(type) {
@@ -18,14 +18,14 @@ export default (state = {}, {
           ownPolls: []
         }
       };
-    case types.ADD_OWN_POLL_ID:
-      newCopy.ownPolls.push(pollID);
+    case types.ADD_OWN_POLL:
+      newCopy.ownPolls.push(pollName);
       return {
         ...state,
         [username]: newCopy
       }
-    case types.DELETE_OWN_POLL_ID:
-      let i = newCopy.ownPolls.findIndex(x => x === pollID);
+    case types.DELETE_OWN_POLL:
+      let i = newCopy.ownPolls.findIndex(x => x === pollName);
       newCopy.ownPolls.splice(i, 1);
       return {
         ...state,

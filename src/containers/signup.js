@@ -9,11 +9,9 @@ import {
 
 export const Signup = ({
   history,
+  dispatch,
   baseColor,
-  postAddUser,
-  changeSignupName,
-  changeSignupPassword,
-  changeSignupUsername
+  signupForm
 }) => (
   <main>
     <div className='container'>
@@ -24,24 +22,32 @@ export const Signup = ({
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              postAddUser(history);
+              dispatch(postAddUser(
+                signupForm.username,
+                signupForm.name,
+                signupForm.password,
+                history
+              ));
             }}
             >
             <div className='input-field'>
               <input
-                onChange={(e) => changeSignupUsername(e.target.value)}
+                value={signupForm.username}
+                onChange={(e) => dispatch(changeSignupUsername(e.target.value))}
                 id='username' type='text' className='validate' required/>
               <label htmlFor='username'>Username</label>
             </div>
             <div className='input-field'>
               <input
-                onChange={(e) => changeSignupName(e.target.value)}
+                value={signupForm.name}
+                onChange={(e) => dispatch(changeSignupName(e.target.value))}
                 id='first-name' type='text' className='validate' required/>
               <label htmlFor='first-name'>First Name</label>
             </div>
             <div className='input-field'>
               <input
-                onChange={(e) => changeSignupPassword(e.target.value)}
+                value={signupForm.password}
+                onChange={(e) => dispatch(changeSignupPassword(e.target.value))}
                 id='password' type='password' className='validate' required/>
               <label htmlFor='password'>Password</label>
             </div>
@@ -54,6 +60,5 @@ export const Signup = ({
 );
 
 export default connect(
-  null,
-  {postAddUser, changeSignupName, changeSignupPassword, changeSignupUsername}
+  state => ({signupForm: state.signupForm})
 )(Signup);

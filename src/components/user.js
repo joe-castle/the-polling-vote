@@ -2,23 +2,26 @@ import React, {Component, PropTypes} from 'react';
 import {Link} from 'react-router';
 
 import formatUrl from '../utils/format-url';
+import {
+  postDeletePoll,
+  postAddPoll,
+  postEditPoll} from '../actions/poll-actions';
+import {
+  changePollFormOptions,
+  changePollFormName,
+  changePollFormType,
+  insertPollForm,
+  clearPollForm} from '../actions/poll-form-actions';
 
 export default ({
   users,
   polls,
   params,
   history,
+  dispatch,
   pollForm,
   baseColor,
-  authedUser,
-  postAddPoll,
-  postEditPoll,
-  clearPollForm,
-  postDeletePoll,
-  insertPollForm,
-  changePollFormType,
-  changePollFormName,
-  changePollFormOptions
+  authedUser
 }) => (
   <div className='container'>
     <div className='row'>
@@ -30,8 +33,8 @@ export default ({
           <button
             onClick={(e) => {
               e.preventDefault();
-              changePollFormType('Add');
-              clearPollForm();
+              dispatch(changePollFormType('Add'));
+              dispatch(clearPollForm());
             }}
             type='button' className={`btn ${baseColor}`}>
             Add Poll
@@ -41,16 +44,24 @@ export default ({
         <form onSubmit={(e) => {
             e.preventDefault();
             if (pollForm.formType === 'Add') {
-              postAddPoll(history);
+              dispatch(postAddPoll(
+                pollForm.name,
+                pollForm.options,
+                history
+              ));
             } else {
-              postEditPoll(history);
+              dispatch(postEditPoll(
+                pollForm.name,
+                pollForm.options,
+                history
+              ));
             }
           }}>
           <h4>{pollForm.formType} Poll</h4>
           <div className='input-field'>
             <input
-              onChange={(e) => changePollFormName(e.target.value)}
               value={pollForm.name}
+              onChange={(e) => dispatch(changePollFormName(e.target.value))}
               type='text'
               placeholder='Poll Name'
               className='validate'
@@ -62,8 +73,12 @@ export default ({
             {pollForm.options.map((x, i) => (
               <input
                 key={i}
-                onChange={(e) => changePollFormOptions(e.target.value, i)}
                 value={x}
+                onChange={(e) => dispatch(changePollFormOptions(
+                  pollForm.options,
+                  e.target.value,
+                  i
+                ))}
                 type='text'
                 placeholder={`Option #${i+1}`}
                 className='validate'
@@ -80,18 +95,17 @@ export default ({
         <div className='divider'/>
         <ul className='collection with-header'>
           <li className='collection-header'><h4>Active Polls</h4></li>
-          {users[params.user].ownPolls.map(x => {
-            let poll = polls.find(y => y.id === x);
+          {users[params.user].ownPolls.map((name, i) => {
             return (
-              <li key={x} className='collection-item'>
+              <li key={i} className='collection-item'>
                 <div>
                   <Link
-                    to={`/polls/${formatUrl(poll.name, true)}`}
-                  >{poll.name}</Link>
+                    to={`/polls/${formatUrl(name, true)}`}
+                  >{name}</Link>
                   {authedUser === params.user && <span><a
                     onClick={(e) => {
                       e.preventDefault();
-                      postDeletePoll(poll.id);
+                      dispatch(postDeletePoll(name));
                     }}
                     className='secondary-content'
                   >
@@ -100,7 +114,7 @@ export default ({
                   <a
                     onClick={(e) => {
                       e.preventDefault();
-                      insertPollForm(poll.id, 'Edit');
+                      dispatch(insertPollForm(name, 'Edit'));
                     }}
                     className='secondary-content'
                   >

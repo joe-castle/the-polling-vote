@@ -1,7 +1,6 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 
-import {postAddUser} from '../actions/user-actions';
 import {
   changeLoginUsername,
   changeLoginPassword,
@@ -9,10 +8,9 @@ import {
 
 export const Login = ({
   history,
+  dispatch,
   baseColor,
-  loginUser,
-  changeLoginPassword,
-  changeLoginUsername
+  loginForm
 }) => (
   <main>
     <div className='container'>
@@ -23,18 +21,24 @@ export const Login = ({
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              loginUser(history);
+              dispatch(loginUser(
+                loginForm.username,
+                loginForm.password,
+                history
+              ));
             }}
             >
             <div className='input-field'>
               <input
-                onChange={(e) => changeLoginUsername(e.target.value)}
+                value={loginForm.username}
+                onChange={(e) => dispatch(changeLoginUsername(e.target.value))}
                 id='username' type='text' className='validate' required/>
               <label htmlFor='username'>Username</label>
             </div>
             <div className='input-field'>
               <input
-                onChange={(e) => changeLoginPassword(e.target.value)}
+                value={loginForm.password}
+                onChange={(e) => dispatch(changeLoginPassword(e.target.value))}
                 id='password' type='password' className='validate' required/>
               <label htmlFor='password'>Password</label>
             </div>
@@ -47,6 +51,5 @@ export const Login = ({
 );
 
 export default connect(
-  null,
-  {loginUser, changeLoginPassword, changeLoginUsername}
+  state => ({loginForm: state.loginForm})
 )(Login);

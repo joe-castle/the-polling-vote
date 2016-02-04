@@ -16,13 +16,12 @@ export const clearLoginForm = () => ({
   type: types.CLEAR_LOGIN_FORM
 })
 
-export const loginUser = (history) => (
-  (dispatch, getState) => {
-    const {loginForm} = getState();
+export const loginUser = (username, password, history) => (
+  dispatch => {
     // server access
       // get name from server
-      dispatch(addAuthedUser(loginForm.username, loginForm.name));
+      dispatch(addAuthedUser(username, name));
       dispatch(clearLoginForm());
-      history.push(`/users/${loginForm.username}`);
+      history.push(`/users/${username}`);
   }
 )

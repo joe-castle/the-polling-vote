@@ -2,14 +2,6 @@ import React, {cloneElement} from 'react';
 import {connect} from 'react-redux';
 import {Link} from 'react-router';
 
-import {postDeletePoll, postAddPoll, postEditPoll} from '../actions/poll-actions';
-import {
-  changePollFormOptions,
-  changePollFormName,
-  changePollFormType,
-  insertPollForm,
-  clearPollForm} from '../actions/poll-form-actions';
-
 import formatUrl from '../utils/format-url';
 
 export const Users = (props) => {
@@ -44,8 +36,5 @@ export default connect(
     polls: state.polls,
     pollForm: state.pollForm,
     authedUser: state.authedUser.username
-  }),
-  {postEditPoll, postAddPoll, postDeletePoll,
-    changePollFormName, changePollFormOptions,
-    changePollFormType, clearPollForm, insertPollForm}
+  })
 )(Users);

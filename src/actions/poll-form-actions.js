@@ -15,35 +15,6 @@ export const insertPollFormOptions = (options) => ({
   options
 });
 
-export const insertPollForm = (pollID, formType) => (
-  (dispatch, getState) => {
-    let {polls} = getState()
-      , poll = polls.find(x => x.id === pollID)
-      , options = Object.keys(poll.options);
-    options.push('');
-
-    dispatch(changePollFormType(formType));
-    dispatch(changePollFormName(poll.name));
-    dispatch(insertPollFormOptions(options));
-  }
-);
-
-export const changePollFormOptions = (value, index) => (
-  (dispatch, getState) => {
-    const {pollForm} = getState();
-
-    if (pollForm.options.length >= 2 && value && index === pollForm.options.length - 1) {
-      dispatch(addPollFormOptionsInput());
-      dispatch(changePollFormOption(value, index));
-    } else if (pollForm.options.length > 2 && !value) {
-      dispatch(removePollFormOptionsInput(index));
-    } else {
-      dispatch(changePollFormOption(value, index));
-    }
-
-  }
-);
-
 export const changePollFormOption = (value, index) => ({
   type: types.CHANGE_POLL_FORM_OPTION,
   value,
@@ -62,3 +33,29 @@ export const removePollFormOptionsInput = (index) => ({
 export const clearPollForm = () => ({
   type: types.CLEAR_POLL_FORM
 });
+
+export const insertPollForm = (pollName, formType) => (
+  (dispatch, getState) => {
+    let poll = getState().polls.find(x => x.name === pollName)
+      , options = Object.keys(poll.options);
+    options.push('');
+
+    dispatch(changePollFormType(formType));
+    dispatch(changePollFormName(poll.name));
+    dispatch(insertPollFormOptions(options));
+  }
+);
+
+export const changePollFormOptions = (options, value, index) => (
+  dispatch => {
+    if (options.length >= 2 && value && index === options.length - 1) {
+      dispatch(addPollFormOptionsInput());
+      dispatch(changePollFormOption(value, index));
+    } else if (options.length > 2 && !value) {
+      dispatch(removePollFormOptionsInput(index));
+    } else {
+      dispatch(changePollFormOption(value, index));
+    }
+
+  }
+);

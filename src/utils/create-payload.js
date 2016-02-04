@@ -1,5 +1,4 @@
-export default (username, name, options, currentOptions) => ({
-  submitter: username,
+export default (name, options, currentOptions) => ({
   name: name.trim(),
   options: options.reduce((x, y) => {
     if (y) {

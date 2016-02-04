@@ -3,12 +3,12 @@ import {Link} from 'react-router';
 import {Bar} from 'react-chartjs';
 
 import formatUrl from '../utils/format-url'
+import {postVoteOnPoll, changeSelectedOption} from '../actions/poll-actions';
 
 export default ({
   polls,
   params,
-  postVoteOnPoll,
-  changeSelectedOption,
+  dispatch
 }) => {
   let pollName = formatUrl(params.poll, false)
     , poll = polls.find(x => x.name === pollName)
@@ -39,7 +39,7 @@ export default ({
       <div className='row'>
         <div className='input-field col s12 m5 offset-m3'>
           <select className='browser-default'
-            onChange={(e) => changeSelectedOption(poll.id, e.target.value)}
+            onChange={(e) => dispatch(changeSelectedOption(poll.name, e.target.value))}
             defaultValue={poll.selectedOption}
           >
             <option value='select' disabled>Select an option</option>
@@ -52,7 +52,7 @@ export default ({
           <button
             onClick={(e) => {
               e.preventDefault();
-              postVoteOnPoll(poll.id, poll.selectedOption)}}
+              dispatch(postVoteOnPoll(poll.name, poll.selectedOption))}}
             type='submit' className='btn'
             disabled={poll.selectedOption === 'select'}>Submit</button>
         </div>

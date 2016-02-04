@@ -9,25 +9,24 @@ export const addUser = (username, name) => ({
   name
 });
 
-export const addOwnPollID = (username, pollID) => ({
-  type: types.ADD_OWN_POLL_ID,
+export const addOwnPoll = (username, pollName) => ({
+  type: types.ADD_OWN_POLL,
   username,
-  pollID
+  pollName
 });
 
-export const deleteOwnPollID = (username, pollID) => ({
-  type: types.DELETE_OWN_POLL_ID,
+export const deleteOwnPoll = (username, pollName) => ({
+  type: types.DELETE_OWN_POLL,
   username,
-  pollID
+  pollName
 });
 
-export const postAddUser = (history) => (
-  (dispatch, getState) => {
-    const {signupForm} = getState()
+export const postAddUser = (username, name, password, history) => (
+  dispatch => {
     // server access
-      dispatch(addUser(signupForm.username, signupForm.name));
-      dispatch(addAuthedUser(signupForm.username, signupForm.name));
+      dispatch(addUser(username, name));
+      dispatch(addAuthedUser(username, name));
       dispatch(clearSignupForm());
-      history.push(`/users/${signupForm.username}`)
+      history.push(`/users/${username}`)
   }
 );
