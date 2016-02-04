@@ -12,6 +12,7 @@ export default (state = initialState, {
 }) => {
 	switch(type) {
     case types.CHANGE_SIGNUP_USERNAME:
+      if(/\s/.test(value)) {return state}
       return {
         ...state,
         username: value

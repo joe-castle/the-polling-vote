@@ -54,7 +54,7 @@ export const postAddPoll = (pollName, options, history) => (
 
 export const postEditPoll = (pollName, newOptions, history) => (
   dispatch => {
-    ajax('PUT', {pollName, newOptions, type:'edit'})
+    ajax('PUT', {pollName, newOptions})
       .done(res => {
         dispatch(editPoll(res.name, res));
         dispatch(clearPollForm());
@@ -81,7 +81,7 @@ export const postDeletePoll = (pollName) => (
 
 export const postVoteOnPoll = (pollName, option) => (
   dispatch => {
-    ajax('PUT', {pollName, option, type: 'vote'})
+    ajax('PUT', {pollName, option}, '/api/polls/vote')
       .done(res => {
         dispatch(voteOnPoll(pollName, option));
         Materialize.toast(`Thanks for voting for '${option}'!`, 4000);

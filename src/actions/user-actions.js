@@ -3,6 +3,8 @@ import * as types from './action-types'
 import {addAuthedUser} from '../actions/authed-user-actions';
 import {clearSignupForm} from '../actions/signup-actions';
 
+import ajax from '../utils/ajax';
+
 export const addUser = (username, name) => ({
   type: types.ADD_USER,
   username,
@@ -23,10 +25,19 @@ export const deleteOwnPoll = (username, pollName) => ({
 
 export const postAddUser = (username, name, password, history) => (
   dispatch => {
-    // server access
-      dispatch(addUser(username, name));
-      dispatch(addAuthedUser(username, name));
-      dispatch(clearSignupForm());
-      history.push(`/users/${username}`)
+    ajax('POST', {username, name, password}, '/signup')
+      .done(res => {
+        dispatch(addUser(username, name));
+        dispatch(addAuthedUser(username, name));
+        dispatch(clearSignupForm());
+        Materialize.toast(
+          'User succesfully created! Redirecting...',
+          1000, '',
+          () => history.push(`/users/${username}`)
+        )
+      })
+      .fail(err => {
+        Materialize.toast(err.responseText, 4000);
+      });
   }
 );

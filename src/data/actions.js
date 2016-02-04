@@ -3,16 +3,19 @@
 const client = require('./client');
 const toCamelCase = require('../utils/toCamelCase');
 
-module.exports = (hash) => ({
+module.exports = (hash, camelCase) => ({
   exists(field) {
-    return client.hexistsAsync(hash, toCamelCase(field))
+    field = camelCase ? toCamelCase(field) : field;
+    return client.hexistsAsync(hash, field)
       .catch(err => console.log(err));
   },
   set(field, value) {
-    return client.hset(hash, toCamelCase(field), JSON.stringify(value));
+    field = camelCase ? toCamelCase(field) : field;
+    return client.hset(hash, field, JSON.stringify(value));
   },
   get(field) {
-    return client.hgetAsync(hash, toCamelCase(field))
+    field = camelCase ? toCamelCase(field) : field;
+    return client.hgetAsync(hash, field)
       .then(res => JSON.parse(res) || null)
       .catch(err => console.log(err));
   },
@@ -25,6 +28,7 @@ module.exports = (hash) => ({
       .catch(err => console.log(err));
   },
   del(field) {
-    return client.hdel(hash, toCamelCase(field));
+    field = camelCase ? toCamelCase(field) : field;
+    return client.hdel(hash, field);
   }
 });
