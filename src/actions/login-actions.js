@@ -1,6 +1,7 @@
 import * as types from './action-types';
 
 import {addAuthedUser} from './authed-user-actions';
+import ajax from '../utils/ajax';
 
 export const changeLoginUsername = (value) => ({
   type: types.CHANGE_LOGIN_USERNAME,
@@ -18,10 +19,18 @@ export const clearLoginForm = () => ({
 
 export const loginUser = (username, password, history) => (
   dispatch => {
-    // server access
-      // get name from server
-      dispatch(addAuthedUser(username, name));
-      dispatch(clearLoginForm());
-      history.push(`/users/${username}`);
+    ajax('POST', {username, password}, '/login')
+      .then(res => {
+        dispatch(addAuthedUser(res.username, res.name));
+        dispatch(clearLoginForm());
+        Materialize.toast(
+          'Login successful! Redirecting',
+          1000, '',
+          () => history.push(`/users/${res.username}`)
+        );
+      })
+      .fail(err => {
+        Materialize.toast('Username or password incorrect, please try again', 4000);
+      })
   }
 )

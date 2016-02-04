@@ -19,6 +19,7 @@ export const Login = ({
           <h1>Login</h1>
           <div className='divider'/>
           <form
+            id='login'
             onSubmit={(e) => {
               e.preventDefault();
               dispatch(loginUser(
@@ -32,14 +33,14 @@ export const Login = ({
               <input
                 value={loginForm.username}
                 onChange={(e) => dispatch(changeLoginUsername(e.target.value))}
-                id='username' type='text' className='validate' required/>
+                name='username' type='text' className='validate' required/>
               <label htmlFor='username'>Username</label>
             </div>
             <div className='input-field'>
               <input
                 value={loginForm.password}
                 onChange={(e) => dispatch(changeLoginPassword(e.target.value))}
-                id='password' type='password' className='validate' required/>
+                name='password' type='password' className='validate' required/>
               <label htmlFor='password'>Password</label>
             </div>
             <button type='submit' className={`btn ${baseColor}`}>Login</button>

@@ -3,13 +3,17 @@
 const bodyParser = require('body-parser');
 const express = require('express');
 const app = express();
+const passport = require('../strategies');
 
 const polls = require('../data/actions')('polls', true);
 const users = require('../data/actions')('users', false);
 const createPoll = require('../utils/create-poll');
 
 app.use(express.static(`${__dirname}/../public`));
+app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
+app.use(passport.initialize());
+
 // app.get('*', (req, res) => res.sendFile(`${__dirname}/../public/index.html`));
 
 app.route('/api/polls')
@@ -66,9 +70,12 @@ app.get('/api/users', (req, res) => {
     });
 });
 
-app.post('/login', (req, res) => {
-
-});
+app.post('/login',
+  passport.authenticate('local', {session: false}),
+  (req, res) => {
+    res.json(req.user);
+  }
+);
 
 app.post('/signup', (req, res) => {
   users.exists(req.body.username)
