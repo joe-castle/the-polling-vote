@@ -61,6 +61,10 @@ const initialState = {
     hayleyhayz: {
       ownPolls: ['How old are you?']
     }
+  },
+  authedUser: {
+    username: 'hayleyhayz',
+    name: 'Hayley'
   }
 }
 

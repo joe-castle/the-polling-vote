@@ -1,9 +1,8 @@
 import * as types from './action-types';
-import {addOwnPollID, deleteOwnPoll} from './user-actions';
+import {addOwnPoll, deleteOwnPoll} from './user-actions';
 import {clearPollForm} from './poll-form-actions';
 
 import formatUrl from '../utils/format-url';
-import createPayload from '../utils/create-payload';
 import ajax from '../utils/ajax';
 
 export const addPoll = (payload) => ({
@@ -36,14 +35,10 @@ export const changeSelectedOption = (pollName, option) => ({
 
 export const postAddPoll = (pollName, options, history) => (
   dispatch => {
-    let payload = createPayload(
-      pollName, options, {}
-    );
-
-    ajax('POST', payload)
+    ajax('POST', {pollName, options})
       .done(res => {
         dispatch(addPoll(res));
-        dispatch(addOwnPollID(res.submitter, res.name));
+        dispatch(addOwnPoll(res.submitter, res.name));
         dispatch(clearPollForm());
         Materialize.toast(
           'Poll succesfully created! Redirecting...',
@@ -58,20 +53,15 @@ export const postAddPoll = (pollName, options, history) => (
 );
 
 export const postEditPoll = (pollName, newOptions, history) => (
-  (dispatch, getState) => {
-    let {options} = getState().polls.find(x => x.name === pollName)
-      , payload = createPayload(
-          pollName, newOptions, options
-      );
-
-    ajax('PUT', {payload, type:'edit'})
+  dispatch => {
+    ajax('PUT', {pollName, newOptions, type:'edit'})
       .done(res => {
-        dispatch(editPoll(payload.name, payload));
+        dispatch(editPoll(res.name, res));
         dispatch(clearPollForm());
         Materialize.toast(
           'Poll succesfully edited! Redirecting...',
           1000, '',
-          () => history.push(`/polls/${formatUrl(payload.name, true)}`)
+          () => history.push(`/polls/${formatUrl(res.name, true)}`)
         );
       });
   }
@@ -81,6 +71,7 @@ export const postDeletePoll = (pollName) => (
   dispatch => {
     ajax('DELETE', {pollName})
       .done(res => {
+        // Need to get authed user to delete
         dispatch(deleteOwnPoll(res.user, pollName));
         dispatch(deletePoll(pollName));
         Materialize.toast('Poll succesfully deleted!', 4000);
@@ -94,6 +85,9 @@ export const postVoteOnPoll = (pollName, option) => (
       .done(res => {
         dispatch(voteOnPoll(pollName, option));
         Materialize.toast(`Thanks for voting for '${option}'!`, 4000);
-      });
+      })
+      .fail(err => {
+        Materialize.toast(err.responseText, 4000);
+      })
   }
 );

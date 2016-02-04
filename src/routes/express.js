@@ -1,64 +1,70 @@
 'use strict';
 
-import bodyParser from 'body-parser';
-import express from 'express';
-
-import {
-  addPoll,
-  editPoll,
-  voteOnPoll,
-  deletePoll} from '../actions/poll-actions';
-import {deleteOwnPollID} from '../actions/user-actions';
-
+const bodyParser = require('body-parser');
+const express = require('express');
 const app = express();
 
-export default ({dispatch, getState}) => {
-  app.use(express.static(`${__dirname}/../public`));
-  app.use(bodyParser.json());
-  // app.get('*', (req, res) => res.sendFile(`${__dirname}/../public/index.html`));
+const polls = require('../data/actions')('polls');
+const createPoll = require('../utils/create-poll');
 
-  app.route('/api/polls')
-    .get((req, res) => {
-      res.json(getState());
-    })
-    .post((req, res) => {
-      let {polls} = getState()
-        , exists = polls.find(x => x.name.toLowerCase() === req.body.name.toLowerCase())
-        , id = polls.length > 0 ? polls[polls.length-1].id + 1 : 1
-        , responseBody = {
-          id,
-          ...req.body
-        };
+app.use(express.static(`${__dirname}/../public`));
+app.use(bodyParser.json());
+// app.get('*', (req, res) => res.sendFile(`${__dirname}/../public/index.html`));
 
-      if (exists) {
-        res.status(409).send('A poll with that name already exists, please try again.');
-      } else {
-        dispatch(addPoll(responseBody));
-        res.status(201).json(responseBody);
-      }
-    })
-    .put((req, res) => {
-      let {type, pollID, payload, option} = req.body
-      if (type === 'edit') {
-        dispatch(editPoll(payload.id, payload))
-      } else if (type === 'vote') {
-        dispatch(voteOnPoll(pollID, option));
-      }
-      res.json(req.body);
-    })
-    .delete((req, res) => {
-      let {pollID, user} = req.body;
-      dispatch(deletePoll(pollID));
-      dispatch(deleteOwnPollID(user, pollID));
-      res.json(req.body);
-    })
+app.route('/api/polls')
+  .get((req, res) => {
+    polls.getAll()
+      .then(polls => {
+        polls ?
+          res.json(polls) :
+          res.status(404).json({error: 'No active polls found'});
+      })
+  })
+  .post((req, res) => {
+    let o = req.body;
+    polls.exists(o.pollName)
+      .then(exists => {
+        if (exists) {
+          res.status(409).send('A poll with that name already exists, please try again.');
+        } else {
+          let poll = createPoll(o.pollName, o.options, {})
+          poll.submitter = 'hayleyhayz'
+          polls.set(poll.name, poll);
+          res.status(201).json(poll);
+        }
+      })
+  })
+  .put((req, res) => {
+    let o = req.body;
+    if (o.type === 'edit') {
+      polls.get(o.pollName)
+        .then(poll => {
+          poll = Object.assign(
+            poll, createPoll(o.pollName, o.newOptions, poll.options)
+          );
+          polls.set(poll.name, poll);
+          res.json(poll);
+        })
+    } else if (o.type === 'vote') {
+      polls.get(o.pollName)
+        .then(poll => {
+          poll.options[o.option] += 1;
+          polls.set(poll.name, poll);
+          res.json(poll);
+        })
+    }
+  })
+  .delete((req, res) => {
+    polls.del(req.body.pollName);
+    res.json(req.body);
+  })
 
-  app.post('/login', (req, res) => {
+app.post('/login', (req, res) => {
 
-  });
+});
 
-  app.post('/signup', (req, res) => {
+app.post('/signup', (req, res) => {
 
-  });
-  return app;
-};
+});
+
+module.exports = app;
