@@ -30,11 +30,10 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.route('/api/polls')
-  .get((req, res) => {
-    polls.getAll()
-      .then(polls => {
-        res.json(polls || {'no-data': 'No active polls found'})
-      });
+  .get(polls.getAll, (req, res) => {
+    req.polls.then(polls => {
+      res.json(polls || {'no-data': 'No active polls found'})
+    });
   })
   .post(ensureAuthenticated, (req, res) => {
     polls.exists(req.body.pollName)
@@ -86,15 +85,14 @@ app.put('/api/polls/vote', (req, res) => {
     })
 });
 
-app.get('/api/users', (req, res) => {
-  users.getAll()
-    .then(users => {
-      if (users) {users = users.map(x => ({
-        username: x.username,
-        ownPolls: x.ownPolls
-      }))}
-      res.json(users || {'no-data': 'No active users found'})
-    });
+app.get('/api/users', users.getAll, (req, res) => {
+  req.users.then(users => {
+    if (users) {users = users.map(x => ({
+      username: x.username,
+      ownPolls: x.ownPolls
+    }))}
+    res.json(users || {'no-data': 'No active users found'})
+  });
 });
 
 app.post('/signup', encryptPassword, (req, res) => {
@@ -130,7 +128,11 @@ app.post('/logout', (req, res) => {
   res.end();
 })
 
-app.use('*', renderHtmlWithInitialState);
+app.use('*',
+  polls.getAll,
+  users.getAll,
+  renderHtmlWithInitialState
+);
 
 // app.get('*', (req, res) => res.sendFile(`${__dirname}/../public/index.html`));
 

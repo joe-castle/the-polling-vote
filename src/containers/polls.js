@@ -14,7 +14,6 @@ export const Polls = (props) => {
           <div className='row'>
             <div className='col s12 m8 offset-m2 center'>
               <h1>Active Polls</h1>
-              <div className='divider'/>
               <div className='collection'>
                 {polls.map((x, i) => (
                   <Link

@@ -19,16 +19,19 @@ module.exports = (hash, camelCase) => ({
       .then(res => JSON.parse(res) || null)
       .catch(err => console.log(err));
   },
-  getAll() {
-    return client.hgetallAsync(hash)
-      .then(res => {
-        if (res) {
-          return Object.keys(res)
-            .map(x => JSON.parse(res[x]))
+  getAll(req, res, next) {
+    req[hash] = client.hgetallAsync(hash)
+      .then(data => {
+        if (data) {
+          return Object.keys(data)
+            .map(x => JSON.parse(data[x]))
         }
         return;
       })
-      .catch(err => console.log(err));
+      .catch(err => {
+        res.status(500).send(err);
+      });
+    next();
   },
   del(field) {
     field = camelCase ? toCamelCase(field) : field;
