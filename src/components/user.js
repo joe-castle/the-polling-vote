@@ -97,35 +97,35 @@ export default ({
           <div className='divider'/>
           <ul className='collection with-header'>
             <li className='collection-header'><h4>Active Polls</h4></li>
-            {user.ownPolls.map((name, i) => {
-              return (
-                <li key={i} className='collection-item'>
-                  <div>
-                    <Link
-                      to={`/polls/${formatUrl(name, true)}`}
-                    >{name}</Link>
-                    {authedUser === params.user && <span><a
-                      onClick={(e) => {
-                        e.preventDefault();
+            {user.ownPolls.map((name, i) => (
+              <li key={i} className='collection-item'>
+                <div>
+                  <Link
+                    to={`/polls/${formatUrl(name, true)}`}
+                  >{name}</Link>
+                  {authedUser === params.user && <span><a
+                    onClick={(e) => {
+                      e.preventDefault();
+                      if (confirm('Are you sure you want to delete this poll?')) {
                         dispatch(postDeletePoll(name));
-                      }}
-                      className='secondary-content'
-                    >
-                      <i className='delete material-icons'>delete</i>
-                    </a>
-                    <a
-                      onClick={(e) => {
-                        e.preventDefault();
-                        dispatch(insertPollForm(name, 'Edit'));
-                      }}
-                      className='secondary-content'
-                    >
-                      <i className='mode-edit material-icons'>mode_edit</i>
-                    </a></span>}
-                  </div>
-                </li>
-              )
-            })}
+                      }
+                    }}
+                    className='secondary-content'
+                  >
+                    <i className='delete material-icons'>delete</i>
+                  </a>
+                  <a
+                    onClick={(e) => {
+                      e.preventDefault();
+                      dispatch(insertPollForm(name, 'Edit'));
+                    }}
+                    className='secondary-content'
+                  >
+                    <i className='mode-edit material-icons'>mode_edit</i>
+                  </a></span>}
+                </div>
+              </li>
+            ))}
           </ul>
         </div>
       </div>

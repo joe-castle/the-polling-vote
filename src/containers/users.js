@@ -14,7 +14,6 @@ export const Users = (props) => {
           <div className='row'>
             <div className='col s12 m8 offset-m2 center'>
               <h1>Active Users</h1>
-              <div className='divider'/>
               <div className='collection'>
                 {users.map((x, i) => (
                   <Link
