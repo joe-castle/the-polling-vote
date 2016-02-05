@@ -37,14 +37,14 @@ export const changeSelectedOption = (pollName, option) => ({
 export const postAddPoll = (pollName, options, history) => (
   dispatch => {
     ajax('POST', {pollName, options})
-      .done(res => {
-        dispatch(addPoll(res));
-        dispatch(addOwnPoll(res.submitter, res.name));
+      .done(poll => {
+        dispatch(addPoll(poll));
+        dispatch(addOwnPoll(poll.submitter, poll.name));
         dispatch(clearPollForm());
         Materialize.toast(
           'Poll succesfully created! Redirecting...',
           1000, '',
-          () => history.push(`/polls/${formatUrl(res.name, true)}`)
+          () => history.push(`/polls/${formatUrl(poll.name, true)}`)
         );
       })
       .fail(err => {
@@ -63,13 +63,13 @@ export const postAddPoll = (pollName, options, history) => (
 export const postEditPoll = (pollName, newOptions, history) => (
   dispatch => {
     ajax('PUT', {pollName, newOptions})
-      .done(res => {
-        dispatch(editPoll(res.name, res));
+      .done(poll => {
+        dispatch(editPoll(poll.name, poll));
         dispatch(clearPollForm());
         Materialize.toast(
           'Poll succesfully edited! Redirecting...',
           1000, '',
-          () => history.push(`/polls/${formatUrl(res.name, true)}`)
+          () => history.push(`/polls/${formatUrl(poll.name, true)}`)
         );
       })
       .fail(err => {
@@ -88,9 +88,9 @@ export const postEditPoll = (pollName, newOptions, history) => (
 export const postDeletePoll = (pollName) => (
   dispatch => {
     ajax('DELETE', {pollName})
-      .done(res => {
+      .done(username => {
         // Need to get authed user to delete
-        dispatch(deleteOwnPoll(res.username, pollName));
+        dispatch(deleteOwnPoll(username, pollName));
         dispatch(deletePoll(pollName));
         Materialize.toast('Poll succesfully deleted!', 4000);
       })
@@ -110,7 +110,7 @@ export const postDeletePoll = (pollName) => (
 export const postVoteOnPoll = (pollName, option) => (
   dispatch => {
     ajax('PUT', {pollName, option}, '/api/polls/vote')
-      .done(res => {
+      .done(() => {
         dispatch(voteOnPoll(pollName, option));
         Materialize.toast(`Thanks for voting for '${option}'!`, 4000);
       })

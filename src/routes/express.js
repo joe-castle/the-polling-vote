@@ -42,10 +42,17 @@ app.route('/api/polls')
         if (exists) {
           res.status(409).send('A poll with that name already exists, please try again.');
         } else {
-          let poll = createPoll(req.body.pollName, req.body.options, {})
-          poll.submitter = req.user.username;
-          polls.set(poll.name, poll);
-          res.status(201).json(poll);
+          users.get(req.user.username)
+            .then(user => {
+              let poll = createPoll(req.body.pollName, req.body.options, {})
+              poll.submitter = req.user.username;
+
+              user.ownPolls.push(poll.name);
+
+              users.set(req.user.username, user);
+              polls.set(poll.name, poll);
+              res.status(201).json(poll);
+            })
         }
       })
   })
@@ -60,9 +67,14 @@ app.route('/api/polls')
       })
   })
   .delete(ensureAuthenticated, (req, res) => {
-    // Delete ownpoll from user as well.
-    polls.del(req.body.pollName);
-    res.json(req.user);
+    users.get(req.user.username)
+      .then(user => {
+        user.ownPolls = user.ownPolls.filter(x => x !== req.body.pollName);
+        users.set(req.user.username, user);
+
+        polls.del(req.body.pollName);
+        res.json(req.user.username);
+      })
   });
 // Only allow 1 vote per IP/User?
 app.put('/api/polls/vote', (req, res) => {
@@ -85,18 +97,6 @@ app.get('/api/users', (req, res) => {
     });
 });
 
-app.post('/login',
-  passport.authenticate('local'),
-  (req, res) => {
-    res.json(req.user);
-  }
-);
-
-app.post('/logout', (req, res) => {
-  req.logout();
-  res.end();
-})
-
 app.post('/signup', encryptPassword, (req, res) => {
   users.exists(req.body.username)
     .then(exists => {
@@ -117,6 +117,18 @@ app.post('/signup', encryptPassword, (req, res) => {
       }
     })
 });
+
+app.post('/login',
+  passport.authenticate('local'),
+  (req, res) => {
+    res.json(req.user);
+  }
+);
+
+app.post('/logout', (req, res) => {
+  req.logout();
+  res.end();
+})
 
 app.use('*', renderHtmlWithInitialState);
 
