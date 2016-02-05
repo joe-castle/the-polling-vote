@@ -1,6 +1,3 @@
-/*<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/js/materialize.min.js"></script>*/
-
 module.exports = (initialState) => (
   `
     <!DOCTYPE html>
@@ -13,12 +10,14 @@ module.exports = (initialState) => (
       </head>
       <body>
         <div id="root"></div>
-      <script>
-        if(!window.__INITIAL_STATE__) {
-          window.__INITIAL_STATE__ = ${JSON.stringify(initialState)}
-        }
-      </script>
-      <script src="bundle.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/js/materialize.min.js"></script>
+        <script>
+          if(!window.__INITIAL_STATE__) {
+            window.__INITIAL_STATE__ = ${JSON.stringify(initialState)}
+          }
+        </script>
+        <script src="bundle.js"></script>
       </body>
     </html>
   `

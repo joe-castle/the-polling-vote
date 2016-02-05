@@ -1,6 +1,7 @@
 import * as types from './action-types';
 import {addOwnPoll, deleteOwnPoll} from './user-actions';
 import {clearPollForm} from './poll-form-actions';
+import {removeAuthedUser} from './authed-user-actions';
 
 import formatUrl from '../utils/format-url';
 import ajax from '../utils/ajax';
@@ -47,7 +48,14 @@ export const postAddPoll = (pollName, options, history) => (
         );
       })
       .fail(err => {
-        Materialize.toast(err.responseText, 4000);
+        if (err.status === 401) {
+          Materialize.toast(`${err.responseText}. Redirecting...`, 1000, '', () => {
+            dispatch(removeAuthedUser());
+            history.push('/login')
+          });
+        } else {
+          Materialize.toast(err.responseText, 4000);
+        }
       });
   }
 );
@@ -63,6 +71,16 @@ export const postEditPoll = (pollName, newOptions, history) => (
           1000, '',
           () => history.push(`/polls/${formatUrl(res.name, true)}`)
         );
+      })
+      .fail(err => {
+        if (err.status === 401) {
+          Materialize.toast(`${err.responseText}. Redirecting...`, 1000, '', () => {
+            dispatch(removeAuthedUser());
+            history.push('/login')
+          });
+        } else {
+          Materialize.toast(err.responseText, 4000);
+        }
       });
   }
 );
@@ -75,6 +93,16 @@ export const postDeletePoll = (pollName) => (
         dispatch(deleteOwnPoll(res.user, pollName));
         dispatch(deletePoll(pollName));
         Materialize.toast('Poll succesfully deleted!', 4000);
+      })
+      .fail(err => {
+        if (err.status === 401) {
+          Materialize.toast(`${err.responseText}. Redirecting...`, 1000, '', () => {
+            dispatch(removeAuthedUser());
+            history.push('/login')
+          });
+        } else {
+          Materialize.toast(err.responseText, 4000);
+        }
       });
   }
 );

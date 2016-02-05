@@ -1,27 +1,47 @@
 'use strict';
 
+const ensureAuthenticated = (req, res, next) => {
+  if (req.isAuthenticated()) {
+    return next();
+  } else {
+    res.status(401).send('This actions requires authentication, please login and try again');
+  }
+}
+
+const session = require('express-session')
+const RedisStore = require('connect-redis')(session);
+const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const express = require('express');
 const app = express();
-const passport = require('../strategies');
+
+const passport = require('../strategies/local');
+const client = require('../data/client');
 
 const polls = require('../data/actions')('polls', true);
 const users = require('../data/actions')('users', false);
 const createPoll = require('../utils/create-poll');
 
 app.use(express.static(`${__dirname}/../public`));
-app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
+app.use(cookieParser());
+app.use(session({
+  store: new RedisStore({client}),
+  secret: 'NEEDS TO BE CHANGED',
+  resave: false,
+  saveUninitialized: false
+}));
 app.use(passport.initialize());
-
-// app.get('*', (req, res) => res.sendFile(`${__dirname}/../public/index.html`));
+app.use(passport.session());
 
 app.route('/api/polls')
   .get((req, res) => {
     polls.getAll()
-      .then(polls => res.json(polls || {'no-data': 'No active polls found'}));
+      .then(polls => {
+        res.json(polls || {'no-data': 'No active polls found'})
+      });
   })
-  .post((req, res) => {
+  .post(ensureAuthenticated, (req, res) => {
     polls.exists(req.body.pollName)
       .then(exists => {
         if (exists) {
@@ -34,7 +54,7 @@ app.route('/api/polls')
         }
       })
   })
-  .put((req, res) => {
+  .put(ensureAuthenticated, (req, res) => {
     polls.get(req.body.pollName)
       .then(poll => {
         poll = Object.assign(
@@ -44,7 +64,7 @@ app.route('/api/polls')
         res.json(poll);
       })
   })
-  .delete((req, res) => {
+  .delete(ensureAuthenticated, (req, res) => {
     // Delete ownpoll from user as well.
     polls.del(req.body.pollName);
     res.json(req.body);
@@ -70,8 +90,16 @@ app.get('/api/users', (req, res) => {
     });
 });
 
+app.get('/currentuser', (req, res) => {
+  if (req.isAuthenticated()) {
+    res.json({username: req.user.username, name: req.user.name})
+  } else {
+    res.json({username: '', name: ''});
+  }
+});
+
 app.post('/login',
-  passport.authenticate('local', {session: false}),
+  passport.authenticate('local'),
   (req, res) => {
     res.json(req.user);
   }
@@ -89,10 +117,15 @@ app.post('/signup', (req, res) => {
           ownPolls: [],
           password: req.body.password
         }
+        req.login(user, (err) => {
+          if (err) {console.log(err)}
+        });
         users.set(req.body.username, user);
         res.status(201).json(user);
       }
     })
 });
+
+// app.get('*', (req, res) => res.sendFile(`${__dirname}/../public/index.html`));
 
 module.exports = app;

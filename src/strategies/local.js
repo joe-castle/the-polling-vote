@@ -18,4 +18,13 @@ passport.use(new LocalStrategy(
   }
 ));
 
+passport.serializeUser((user, done) => {
+  done(null, user.username);
+});
+
+passport.deserializeUser((username, done) => {
+  users.get(username)
+    .then(user => done(null, user));
+});
+
 module.exports = passport;
