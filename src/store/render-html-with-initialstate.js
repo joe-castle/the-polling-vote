@@ -9,13 +9,13 @@ module.exports = (req, res) => {
     .then(polls => {
       users.getAll()
         .then(users => {
-          let initialState = {polls, users: users.map(x => ({
+          let initialState = {}
+          if (req.user) {initialState.authedUser = req.user}
+          if (polls) {initialState.polls = polls}
+          if (users) {initialState.users = users.map(x => ({
             username: x.username,
             ownPolls: x.ownPolls
           }))};
-          if (req.user) {
-            initialState.authedUser = req.user
-          }
           res.send(template(initialState));
         })
     })

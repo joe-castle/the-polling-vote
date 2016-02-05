@@ -11,6 +11,7 @@ const passport = require('../strategies/local');
 const client = require('../data/client');
 const renderHtmlWithInitialState = require('../store/render-html-with-initialstate');
 const ensureAuthenticated = require('../middleware').ensureAuthenticated;
+const encryptPassword = require('../middleware').encryptPassword;
 
 const polls = require('../data/actions')('polls', true);
 const users = require('../data/actions')('users', false);
@@ -96,7 +97,7 @@ app.post('/logout', (req, res) => {
   res.end();
 })
 
-app.post('/signup', (req, res) => {
+app.post('/signup', encryptPassword, (req, res) => {
   users.exists(req.body.username)
     .then(exists => {
       if (exists) {

@@ -17,6 +17,7 @@
   "author": "Joe Smith <joesmith0488@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "bcrypt": "^0.8.5",
     "bluebird": "^3.2.1",
     "body-parser": "^1.14.2",
     "chart.js": "^1.0.2",
