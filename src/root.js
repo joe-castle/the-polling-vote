@@ -5,7 +5,13 @@ import Routes from './routes/react';
 import DevTools from './containers/dev-tools';
 import ajax from './utils/ajax';
 
-const store = configureStore(window.__INITIAL_STATE__);
+let initialState = window.__INITIAL_STATE__;
+if (initialState.polls) {initialState.polls = initialState.polls.map(x => ({
+  ...x,
+  selectedOption: 'select'
+}))}
+
+const store = configureStore(initialState);
 
 if (process.env.NODE_ENV === 'production') {
   module.exports = () => (

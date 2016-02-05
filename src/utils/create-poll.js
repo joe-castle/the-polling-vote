@@ -6,5 +6,5 @@ module.exports = (name, options, currentOptions) => ({
     }
     return x;
   }, {}),
-  selectedOption: 'select'
+  voted: []
 });

@@ -17,7 +17,7 @@ import Signup from '../containers/signup';
 import Login from '../containers/login';
 
 export default () => (
-  <Router history={browserHistory}>
+  <Router history={history}>
     <Route path='/' component={App}>
       <IndexRoute component={Polls}/>
       <Route path='polls' component={Polls}>

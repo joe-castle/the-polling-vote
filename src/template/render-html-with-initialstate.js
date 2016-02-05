@@ -9,7 +9,10 @@ module.exports = (req, res) => {
     req.users.then(users => {
       let initialState = {}
       if (req.user) {initialState.authedUser = req.user}
-      if (polls) {initialState.polls = polls}
+      if (polls) {initialState.polls = polls.map(x => {
+        delete x.voted;
+        return x;
+      })};
       if (users) {initialState.users = users.map(x => ({
         username: x.username,
         ownPolls: x.ownPolls

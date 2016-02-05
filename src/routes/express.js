@@ -9,7 +9,7 @@ const app = express();
 
 const passport = require('../strategies/local');
 const client = require('../data/client');
-const renderHtmlWithInitialState = require('../store/render-html-with-initialstate');
+const renderHtmlWithInitialState = require('../template/render-html-with-initialstate');
 const ensureAuthenticated = require('../middleware').ensureAuthenticated;
 const encryptPassword = require('../middleware').encryptPassword;
 
@@ -17,7 +17,7 @@ const polls = require('../data/actions')('polls', true);
 const users = require('../data/actions')('users', false);
 const createPoll = require('../utils/create-poll');
 
-// app.use(express.static(`${__dirname}/../public`));
+app.set('trust proxy', true);
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(session({
@@ -32,6 +32,10 @@ app.use(passport.session());
 app.route('/api/polls')
   .get(polls.getAll, (req, res) => {
     req.polls.then(polls => {
+      if (polls) {polls = polls.map(x => {
+        delete x.voted;
+        return x;
+      })};
       res.json(polls || {'no-data': 'No active polls found'})
     });
   })
@@ -79,9 +83,14 @@ app.route('/api/polls')
 app.put('/api/polls/vote', (req, res) => {
   polls.get(req.body.pollName)
     .then(poll => {
-      poll.options[req.body.option] += 1;
-      polls.set(poll.name, poll);
-      res.json(poll);
+      if (!poll.voted.find(x => x === req.ip)) {
+        poll.options[req.body.option] += 1;
+        poll.voted.push(req.ip);
+        polls.set(poll.name, poll);
+        res.json(poll);
+      } else {
+        res.status(409).send('Sorry, you can only vote on a poll once.');
+      }
     })
 });
 

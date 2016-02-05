@@ -16,14 +16,7 @@ let entry, cssLoaders, jsLoaders = ['babel']
       configureStore: './store/configure-store'
       // Currently using a CDN because materialize is being janky
       // $: 'jquery'
-    }),
-    // new HtmlWebpackPlugin({
-    //   // Change the title for new projects
-    //   title: 'React Starter Project',
-    //   description: 'React-Redux Starter Project',
-    //   template: './src/index.template.html',
-    //   inject: true
-    // })
+    })
   ];
 
 if (process.env.NODE_ENV === 'production') {
@@ -55,7 +48,8 @@ module.exports = {
   entry: entry,
   output: {
     path: `${__dirname}/../src/public`,
-    filename: 'bundle.js'
+    filename: 'bundle.js',
+    publicPath: '/public/'
   },
   plugins: plugins,
   module: {
