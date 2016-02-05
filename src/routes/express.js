@@ -92,7 +92,8 @@ app.post('/login',
 );
 
 app.post('/logout', (req, res) => {
-
+  req.logout();
+  res.end();
 })
 
 app.post('/signup', (req, res) => {

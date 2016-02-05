@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import {Link} from 'react-router';
 import classNames from 'classNames';
 
-import {removeAuthedUser} from '../actions/authed-user-actions';
+import {logoutUser} from '../actions/authed-user-actions';
 
 const Navbar = ({
   name,
@@ -34,7 +34,7 @@ const Navbar = ({
               <Link to={`/users/${username}`}>{`Hello ${name}`}</Link>
             </li>
             <li>
-              <Link onClick={() => dispatch(removeAuthedUser())} to='/'>Logout</Link>
+              <a onClick={() => dispatch(logoutUser())}>Logout</a>
             </li></span>}
           </ul>
         </div>

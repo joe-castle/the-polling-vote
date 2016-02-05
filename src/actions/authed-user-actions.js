@@ -1,4 +1,6 @@
-import * as types from './action-types'
+import * as types from './action-types';
+
+import ajax from '../utils/ajax';
 
 export const addAuthedUser = (username, name) => ({
   type: types.ADD_AUTHED_USER,
@@ -12,7 +14,10 @@ export const removeAuthedUser = () => ({
 
 export const logoutUser = () => (
   dispatch => {
-
-    dispatch(removeAuthedUser());
+    $.post('/logout')
+      .done(res => {
+        dispatch(removeAuthedUser());
+        
+      })
   }
 )

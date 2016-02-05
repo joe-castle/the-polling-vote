@@ -16,11 +16,11 @@ export const Users = (props) => {
               <h1>Active Users</h1>
               <div className='divider'/>
               <div className='collection'>
-                {Object.keys(users).map((x, i) => (
+                {users.map((x, i) => (
                   <Link
                     key={i}
-                    to={`/users/${x}`}
-                    className='collection-item'>{x}</Link>
+                    to={`/users/${x.username}`}
+                    className='collection-item'>{x.username}</Link>
                 ))}
               </div>
             </div>
