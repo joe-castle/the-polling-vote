@@ -17,13 +17,13 @@ let entry, cssLoaders, jsLoaders = ['babel']
       // Currently using a CDN because materialize is being janky
       // $: 'jquery'
     }),
-    new HtmlWebpackPlugin({
-      // Change the title for new projects
-      title: 'React Starter Project',
-      description: 'React-Redux Starter Project',
-      template: './src/index.template.html',
-      inject: true
-    })
+    // new HtmlWebpackPlugin({
+    //   // Change the title for new projects
+    //   title: 'React Starter Project',
+    //   description: 'React-Redux Starter Project',
+    //   template: './src/index.template.html',
+    //   inject: true
+    // })
   ];
 
 if (process.env.NODE_ENV === 'production') {

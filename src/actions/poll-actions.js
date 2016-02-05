@@ -90,7 +90,7 @@ export const postDeletePoll = (pollName) => (
     ajax('DELETE', {pollName})
       .done(res => {
         // Need to get authed user to delete
-        dispatch(deleteOwnPoll(res.user, pollName));
+        dispatch(deleteOwnPoll(res.username, pollName));
         dispatch(deletePoll(pollName));
         Materialize.toast('Poll succesfully deleted!', 4000);
       })

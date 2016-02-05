@@ -5,7 +5,7 @@ import Routes from './routes/react';
 import DevTools from './containers/dev-tools';
 import ajax from './utils/ajax';
 
-const store = configureStore();
+const store = configureStore(window.__INITIAL_STATE__);
 
 if (process.env.NODE_ENV === 'production') {
   module.exports = () => (

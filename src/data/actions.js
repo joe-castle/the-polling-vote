@@ -22,7 +22,10 @@ module.exports = (hash, camelCase) => ({
   getAll() {
     return client.hgetallAsync(hash)
       .then(res => {
-        if (res) {return Object.keys(res).map(x => JSON.parse(res[x]))}
+        if (res) {
+          return Object.keys(res)
+            .map(x => JSON.parse(res[x]))
+        }
         return;
       })
       .catch(err => console.log(err));

@@ -9,3 +9,10 @@ export const addAuthedUser = (username, name) => ({
 export const removeAuthedUser = () => ({
   type: types.REMOVE_AUTHED_USER
 });
+
+export const logoutUser = () => (
+  dispatch => {
+
+    dispatch(removeAuthedUser());
+  }
+)

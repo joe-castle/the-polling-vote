@@ -1,13 +1,5 @@
 'use strict';
 
-const ensureAuthenticated = (req, res, next) => {
-  if (req.isAuthenticated()) {
-    return next();
-  } else {
-    res.status(401).send('This actions requires authentication, please login and try again');
-  }
-}
-
 const session = require('express-session')
 const RedisStore = require('connect-redis')(session);
 const cookieParser = require('cookie-parser');
@@ -17,12 +9,14 @@ const app = express();
 
 const passport = require('../strategies/local');
 const client = require('../data/client');
+const renderHtmlWithInitialState = require('../store/render-html-with-initialstate');
+const ensureAuthenticated = require('../middleware').ensureAuthenticated;
 
 const polls = require('../data/actions')('polls', true);
 const users = require('../data/actions')('users', false);
 const createPoll = require('../utils/create-poll');
 
-app.use(express.static(`${__dirname}/../public`));
+// app.use(express.static(`${__dirname}/../public`));
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(session({
@@ -48,7 +42,7 @@ app.route('/api/polls')
           res.status(409).send('A poll with that name already exists, please try again.');
         } else {
           let poll = createPoll(req.body.pollName, req.body.options, {})
-          poll.submitter = 'joesmith'
+          poll.submitter = req.user.username;
           polls.set(poll.name, poll);
           res.status(201).json(poll);
         }
@@ -67,7 +61,7 @@ app.route('/api/polls')
   .delete(ensureAuthenticated, (req, res) => {
     // Delete ownpoll from user as well.
     polls.del(req.body.pollName);
-    res.json(req.body);
+    res.json(req.user);
   });
 // Only allow 1 vote per IP/User?
 app.put('/api/polls/vote', (req, res) => {
@@ -90,20 +84,16 @@ app.get('/api/users', (req, res) => {
     });
 });
 
-app.get('/currentuser', (req, res) => {
-  if (req.isAuthenticated()) {
-    res.json({username: req.user.username, name: req.user.name})
-  } else {
-    res.json({username: '', name: ''});
-  }
-});
-
 app.post('/login',
   passport.authenticate('local'),
   (req, res) => {
     res.json(req.user);
   }
 );
+
+app.post('/logout', (req, res) => {
+
+})
 
 app.post('/signup', (req, res) => {
   users.exists(req.body.username)
@@ -125,6 +115,8 @@ app.post('/signup', (req, res) => {
       }
     })
 });
+
+app.use('*', renderHtmlWithInitialState);
 
 // app.get('*', (req, res) => res.sendFile(`${__dirname}/../public/index.html`));
 
