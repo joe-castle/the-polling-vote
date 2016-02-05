@@ -5,8 +5,8 @@ const polls = require('../data/actions')('polls');
 const users = require('../data/actions')('users');
 
 module.exports = (req, res) => {
-  req.polls.then(polls => {
-    req.users.then(users => {
+  polls.getAll().then(polls => {
+    users.getAll().then(users => {
       let initialState = {}
       if (req.user) {initialState.authedUser = req.user}
       if (polls) {initialState.polls = polls.map(x => {

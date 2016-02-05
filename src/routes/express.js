@@ -1,5 +1,6 @@
 'use strict';
 
+
 const session = require('express-session')
 const RedisStore = require('connect-redis')(session);
 const cookieParser = require('cookie-parser');
@@ -11,10 +12,10 @@ const passport = require('../strategies/local');
 const client = require('../data/client');
 const renderHtmlWithInitialState = require('../template/render-html-with-initialstate');
 const ensureAuthenticated = require('../middleware').ensureAuthenticated;
-const encryptPassword = require('../middleware').encryptPassword;
 
 const polls = require('../data/actions')('polls', true);
 const users = require('../data/actions')('users', false);
+const User = require('../classes/user');
 const createPoll = require('../utils/create-poll');
 
 app.set('trust proxy', true);
@@ -104,23 +105,22 @@ app.get('/api/users', users.getAll, (req, res) => {
   });
 });
 
-app.post('/signup', encryptPassword, (req, res) => {
+app.post('/signup', (req, res) => {
   users.exists(req.body.username)
     .then(exists => {
       if (exists) {
         res.status(409).send('A user with that username already exists, please try again.');
       } else {
-        const user = {
-          username: req.body.username,
-          name: req.body.name,
-          ownPolls: [],
-          password: req.body.password
-        }
-        req.login(user, (err) => {
-          if (err) {console.log(err)}
-        });
-        users.set(req.body.username, user);
-        res.status(201).json(user);
+        const user = User(
+          req.body.username,
+          req.body.name,
+          req.body.password
+        );
+        user.encryptPassword();
+        users.set(user.username, user);
+
+        req.login(user, (err) => {if (err) {console.log(err)}});
+        res.status(201).json(user.format());
       }
     })
 });
@@ -137,12 +137,6 @@ app.post('/logout', (req, res) => {
   res.end();
 })
 
-app.use('*',
-  polls.getAll,
-  users.getAll,
-  renderHtmlWithInitialState
-);
-
-// app.get('*', (req, res) => res.sendFile(`${__dirname}/../public/index.html`));
+app.use('*', renderHtmlWithInitialState);
 
 module.exports = app;
