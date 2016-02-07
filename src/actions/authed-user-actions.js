@@ -17,7 +17,6 @@ export const logoutUser = () => (
     $.post('/logout')
       .done(res => {
         dispatch(removeAuthedUser());
-        
       })
   }
 )

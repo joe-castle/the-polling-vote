@@ -36,8 +36,5 @@ export const postAddUser = (username, name, password, history) => (
           () => history.push(`/users/${username}`)
         )
       })
-      .fail(err => {
-        Materialize.toast(err.responseText, 4000);
-      });
   }
 );

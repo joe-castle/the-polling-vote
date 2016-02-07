@@ -1,12 +1,10 @@
 import React from 'react';
-import {Router, Route, IndexRoute, browserHistory} from 'react-router';
+import {Router, Route, IndexRoute, useRouterHistory} from 'react-router';
 import createBrowserHistory from 'history/lib/createBrowserHistory';
-import useQueries from 'history/lib/useQueries';
-import useBasename from 'history/lib/useBasename';
 
-export const history = useQueries(
-  useBasename(createBrowserHistory)
-)({queryKey: false});
+export const history = useRouterHistory(
+  createBrowserHistory
+)({ queryKey: false });
 
 import App from '../components/app';
 import Polls from '../containers/polls';
