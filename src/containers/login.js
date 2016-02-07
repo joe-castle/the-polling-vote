@@ -7,7 +7,6 @@ import {
   loginUser} from '../actions/login-actions';
 
 export const Login = ({
-  history,
   dispatch,
   baseColor,
   loginForm
@@ -24,8 +23,7 @@ export const Login = ({
               e.preventDefault();
               dispatch(loginUser(
                 loginForm.username,
-                loginForm.password,
-                history
+                loginForm.password
               ));
             }}
             >

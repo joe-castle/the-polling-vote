@@ -17,7 +17,6 @@ export default ({
   users,
   polls,
   params,
-  history,
   dispatch,
   pollForm,
   baseColor,
@@ -48,14 +47,12 @@ export default ({
               if (pollForm.formType === 'Add') {
                 dispatch(postAddPoll(
                   pollForm.name,
-                  pollForm.options,
-                  history
+                  pollForm.options
                 ));
               } else {
                 dispatch(postEditPoll(
                   pollForm.name,
-                  pollForm.options,
-                  history
+                  pollForm.options
                 ));
               }
             }}>

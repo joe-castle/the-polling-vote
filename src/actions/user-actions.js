@@ -3,6 +3,7 @@ import * as types from './action-types'
 import {addAuthedUser} from '../actions/authed-user-actions';
 import {clearSignupForm} from '../actions/signup-actions';
 
+import {history} from '../routes/react';
 import ajax from '../utils/ajax';
 
 export const addUser = (username, name) => ({
@@ -23,7 +24,7 @@ export const deleteOwnPoll = (username, pollName) => ({
   pollName
 });
 
-export const postAddUser = (username, name, password, history) => (
+export const postAddUser = (username, name, password) => (
   dispatch => {
     ajax('POST', {username, name, password}, '/signup')
       .done(res => {

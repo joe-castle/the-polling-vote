@@ -1,6 +1,8 @@
 import * as types from './action-types';
 
 import {addAuthedUser} from './authed-user-actions';
+
+import {history} from '../routes/react';
 import ajax from '../utils/ajax';
 
 export const changeLoginUsername = (value) => ({
@@ -17,7 +19,7 @@ export const clearLoginForm = () => ({
   type: types.CLEAR_LOGIN_FORM
 })
 
-export const loginUser = (username, password, history) => (
+export const loginUser = (username, password) => (
   dispatch => {
     ajax('POST', {username, password}, '/login')
       .then(res => {

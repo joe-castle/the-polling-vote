@@ -8,7 +8,6 @@ import {
   changeSignupPassword} from '../actions/signup-actions';
 
 export const Signup = ({
-  history,
   dispatch,
   baseColor,
   signupForm
@@ -26,7 +25,6 @@ export const Signup = ({
                 signupForm.username,
                 signupForm.name,
                 signupForm.password,
-                history
               ));
             }}
             >
