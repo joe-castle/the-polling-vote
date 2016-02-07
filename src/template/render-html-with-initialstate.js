@@ -1,22 +1,16 @@
 'use strict';
 
 const template = require('./template.js');
-const polls = require('../data/actions')('polls');
-const users = require('../data/actions')('users');
+const Users = require('../models/users');
+const Polls = require('../models/polls');
 
 module.exports = (req, res) => {
-  polls.getAll().then(polls => {
-    users.getAll().then(users => {
+  Polls.getAll().then(polls => {
+    Users.getAll().then(users => {
       let initialState = {}
       if (req.user) {initialState.authedUser = req.user}
-      if (polls) {initialState.polls = polls.map(x => {
-        delete x.voted;
-        return x;
-      })};
-      if (users) {initialState.users = users.map(x => ({
-        username: x.username,
-        ownPolls: x.ownPolls
-      }))};
+      if (polls) {initialState.polls = polls.map(x => Polls.format(x))}
+      if (users) {initialState.users = users.map(x => Users.format(x))}
       res.send(template(initialState));
     })
   })

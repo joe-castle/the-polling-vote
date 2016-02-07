@@ -38,6 +38,7 @@ export const postAddPoll = (pollName, options, history) => (
   dispatch => {
     ajax('POST', {pollName, options})
       .done(poll => {
+        poll.selectedOption = 'select';
         dispatch(addPoll(poll));
         dispatch(addOwnPoll(poll.submitter, poll.name));
         dispatch(clearPollForm());

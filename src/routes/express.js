@@ -1,6 +1,5 @@
 'use strict';
 
-
 const session = require('express-session')
 const RedisStore = require('connect-redis')(session);
 const cookieParser = require('cookie-parser');
@@ -13,10 +12,8 @@ const client = require('../data/client');
 const renderHtmlWithInitialState = require('../template/render-html-with-initialstate');
 const ensureAuthenticated = require('../middleware').ensureAuthenticated;
 
-const polls = require('../data/actions')('polls', true);
-const users = require('../data/actions')('users', false);
-const User = require('../classes/user');
-const createPoll = require('../utils/create-poll');
+const Users = require('../models/users');
+const Polls = require('../models/polls');
 
 app.set('trust proxy', true);
 app.use(bodyParser.json());
@@ -31,106 +28,53 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.route('/api/polls')
-  .get(polls.getAll, (req, res) => {
-    req.polls.then(polls => {
-      if (polls) {polls = polls.map(x => {
-        delete x.voted;
-        return x;
-      })};
-      res.json(polls || {'no-data': 'No active polls found'})
-    });
-  })
-  .post(ensureAuthenticated, (req, res) => {
-    polls.exists(req.body.pollName)
-      .then(exists => {
-        if (exists) {
-          res.status(409).send('A poll with that name already exists, please try again.');
-        } else {
-          users.get(req.user.username)
-            .then(user => {
-              let poll = createPoll(req.body.pollName, req.body.options, {})
-              poll.submitter = req.user.username;
-
-              user.ownPolls.push(poll.name);
-
-              users.set(req.user.username, user);
-              polls.set(poll.name, poll);
-              res.status(201).json(poll);
-            })
-        }
+  .get(Polls.getAll)
+  .post(ensureAuthenticated, Polls.exists, (req, res) => {
+    Users.get(req.user.username)
+      .then(renameme => {
+        renameme.addPoll(req.poll.name);
+        req.poll.saveToDB();
+        res.status(201).json(req.poll.format());
       })
   })
   .put(ensureAuthenticated, (req, res) => {
-    polls.get(req.body.pollName)
+    Polls.get(req.body.pollName)
       .then(poll => {
-        poll = Object.assign(
-          poll, createPoll(req.body.pollName, req.body.newOptions, poll.options)
-        );
-        polls.set(poll.name, poll);
+        poll.edit(req.body.newOptions);
         res.json(poll);
       })
   })
   .delete(ensureAuthenticated, (req, res) => {
-    users.get(req.user.username)
-      .then(user => {
-        user.ownPolls = user.ownPolls.filter(x => x !== req.body.pollName);
-        users.set(req.user.username, user);
-
-        polls.del(req.body.pollName);
-        res.json(req.user.username);
-      })
+    Users.get(req.user.username).then(renameme => {
+      renameme.deletePoll(req.body.pollName);
+      Polls.del(req.body.pollName);
+      res.json(renameme.username);
+    })
   });
-// Only allow 1 vote per IP/User?
+
 app.put('/api/polls/vote', (req, res) => {
-  polls.get(req.body.pollName)
+  Polls.get(req.body.pollName)
     .then(poll => {
-      if (!poll.voted.find(x => x === req.ip)) {
-        poll.options[req.body.option] += 1;
-        poll.voted.push(req.ip);
-        polls.set(poll.name, poll);
-        res.json(poll);
-      } else {
+      if (poll.hasVoted(req.ip)) {
         res.status(409).send('Sorry, you can only vote on a poll once.');
-      }
-    })
-});
-
-app.get('/api/users', users.getAll, (req, res) => {
-  req.users.then(users => {
-    if (users) {users = users.map(x => ({
-      username: x.username,
-      ownPolls: x.ownPolls
-    }))}
-    res.json(users || {'no-data': 'No active users found'})
-  });
-});
-
-app.post('/signup', (req, res) => {
-  users.exists(req.body.username)
-    .then(exists => {
-      if (exists) {
-        res.status(409).send('A user with that username already exists, please try again.');
       } else {
-        const user = User(
-          req.body.username,
-          req.body.name,
-          req.body.password
-        );
-        user.encryptPassword();
-        users.set(user.username, user);
-
-        req.login(user, (err) => {if (err) {console.log(err)}});
-        res.status(201).json(user.format());
+        poll.vote(req.body.option, req.ip);
+        res.json(poll);
       }
     })
 });
 
-app.post('/login',
-  passport.authenticate('local'),
-  (req, res) => {
-    res.json(req.user);
-  }
-);
+app.get('/api/users', Users.getAll);
+
+app.post('/signup', Users.exists, (req, res) => {
+  req.renameme.encryptPassword().saveToDB();
+  req.login(req.renameme, (err) => {if (err) {console.log(err)}});
+  res.status(201).json(req.renameme.format());
+});
+
+app.post('/login', passport.authenticate('local'), (req, res) => {
+  res.json(req.user);
+});
 
 app.post('/logout', (req, res) => {
   req.logout();
