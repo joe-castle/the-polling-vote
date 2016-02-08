@@ -34,6 +34,10 @@ export default ({
           <h5>Submitted by: {' '}
             <Link to={`/users/${poll.submitter}`}>{poll.submitter}</Link>
           </h5>
+          <a
+            href={`https://twitter.com/intent/tweet?text=${poll.name} - Poll @ The Polling Vote - ${window.location.origin}/polls/${formatUrl(poll.name, true)}`} 
+            target='_blank'
+            className='btn blue'>Share on Twitter</a>
         </div>
       </div>
       <div className='row'>
