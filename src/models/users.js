@@ -59,6 +59,9 @@ init.get = (username) => (
 )
 
 init.exists = (req, res, next) => {
+  if (!req.body.username || !req.body.name || !req.body.password) {
+    res.status(400).send('Please provide a username, name and password to signup.');
+  }
   users.exists(req.body.username)
     .then(exists => {
       if (exists) {
