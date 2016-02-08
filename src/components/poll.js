@@ -35,7 +35,7 @@ export default ({
             <Link to={`/users/${poll.submitter}`}>{poll.submitter}</Link>
           </h5>
           <a
-            href={`https://twitter.com/intent/tweet?text=${poll.name} - Poll @ The Polling Vote - ${window.location.origin}/polls/${formatUrl(poll.name, true)}`} 
+            href={`https://twitter.com/intent/tweet?text=${poll.name} - Poll @ The Polling Vote - ${window.location.origin}/polls/${formatUrl(poll.name, true)}`}
             target='_blank'
             className='btn blue'>Share on Twitter</a>
         </div>
@@ -63,7 +63,14 @@ export default ({
       </div>
       <div className='row center'>
         <div className='col s12'>
-          <Bar data={data} width={400} height={250}/>
+          <Bar
+            data={data}
+            width={(function(){if(window.innerWidth < 600) {
+              return window.innerWidth*0.85
+            } else {
+              return window.innerWidth*0.70
+            }}())}
+            height={400}/>
         </div>
       </div>
     </div>
