@@ -42,7 +42,7 @@ export default ({
             onChange={(e) => dispatch(changeSelectedOption(poll.name, e.target.value))}
             defaultValue={poll.selectedOption}
           >
-            <option value='select' disabled>Select an option</option>
+            <option value='select' disabled>Select an option to vote</option>
             {options.map((x, i) => (
               <option key={i} value={x}>{x}</option>
             ))}

@@ -53,8 +53,8 @@ init.getAll = (req, res) => {
 };
 
 init.get = (username) => (
-  users.get(username).then(userObj => init(
-    userObj.username, userObj.name, userObj.password, userObj.ownPolls
+  users.get(username).then(user => init(
+    user.username, user.name, user.password, user.ownPolls
   ))
 )
 

@@ -1,6 +1,6 @@
 'use strict';
 
-const app = require('./routes/express');
+const app = require('./routes/express-config');
 
 const port = process.env.PORT || 3000;
 

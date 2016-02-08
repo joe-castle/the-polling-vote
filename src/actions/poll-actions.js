@@ -1,6 +1,6 @@
 import * as types from './action-types';
 import {addOwnPoll, deleteOwnPoll} from './user-actions';
-import {clearPollForm} from './poll-form-actions';
+import {clearPollForm, changePollFormType} from './poll-form-actions';
 import {removeAuthedUser} from './authed-user-actions';
 
 import {history} from '../routes/react';
@@ -74,6 +74,8 @@ export const postDeletePoll = (pollName) => (
         // Need to get authed user to delete
         dispatch(deleteOwnPoll(username, pollName));
         dispatch(deletePoll(pollName));
+        dispatch(changePollFormType('Add'));
+        dispatch(clearPollForm());
         Materialize.toast('Poll succesfully deleted!', 4000);
       })
   }
