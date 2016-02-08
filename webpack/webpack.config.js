@@ -15,7 +15,7 @@ let entry
       // and strips them if in production.
       // See /src/frontend/root.js.
       Root: './root',
-      configureStore: './store/configure-store'
+      configureStore: './configure-store'
       // Currently using a CDN because materialize is being janky
       // $: 'jquery'
     })

@@ -3,7 +3,7 @@ import {history} from '../routes/react';
 import {isFetching} from '../actions/is-fetching-actions';
 import {removeAuthedUser} from '../actions/authed-user-actions';
 
-import {store} from '../root';
+import store from '../store';
 
 export default (type, payload, url = '/api/polls', dataType = 'json') => (
   $.ajax({
