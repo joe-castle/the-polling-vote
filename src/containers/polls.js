@@ -5,29 +5,34 @@ import {Link} from 'react-router';
 import formatUrl from '../utils/format-url';
 
 export const Polls = (props) => {
-  let child, {polls} = props;
-  if (props.children) {child = cloneElement(props.children, {...props});}
-  return (
-    <main>
-      {child ||
-        <div className='container'>
-          <div className='row'>
-            <div className='col s12 m8 offset-m2 center'>
-              <h1>Active Polls</h1>
-              <div className='collection'>
-                {polls.map((x, i) => (
-                  <Link
-                    key={i}
-                    to={`/polls/${formatUrl(x.name, true)}`}
-                    className='collection-item'>{x.name}</Link>
-                ))}
-              </div>
+  if (props.children) {
+    return cloneElement(props.children, {...props});
+  } else {
+    return props.polls.length > 0 ?
+      <div className='container'>
+        <div className='row'>
+          <div className='col s12 m8 offset-m2 center'>
+            <h1>Active Polls</h1>
+            <div className='collection'>
+              {props.polls.map((x, i) => (
+                <Link
+                  key={i}
+                  to={`/polls/${formatUrl(x.name, true)}`}
+                  className='collection-item'>{x.name}</Link>
+              ))}
             </div>
           </div>
         </div>
-      }
-    </main>
-  )
+      </div>
+      :
+      <div className='container'>
+        <div className='row'>
+          <div className='col s12 m8 offset-m2 center'>
+            <h1>No active polls found.</h1>
+          </div>
+        </div>
+      </div>
+  }
 };
 export default connect(
   state => ({polls: state.polls})

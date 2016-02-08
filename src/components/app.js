@@ -11,7 +11,9 @@ export default ({
   return (
     <div className='wrapper'>
       <Navbar location={location} baseColor={baseColor}/>
-      {cloneElement(children, {baseColor})}
+      <main>
+        {cloneElement(children, {baseColor})}
+      </main>
       <Footer baseColor={baseColor}/>
     </div>
   )
