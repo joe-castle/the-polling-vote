@@ -35,6 +35,7 @@ export const loginUser = (username, password) => (
         );
       })
       .fail(err => {
+        dispatch(isFetching(false));
         Materialize.toast('Username or password incorrect, please try again', 4000);
       })
   }

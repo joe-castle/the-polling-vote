@@ -11,7 +11,7 @@ if (initialState.polls) {initialState.polls = initialState.polls.map(x => ({
   selectedOption: 'select'
 }))}
 
-const store = configureStore(initialState);
+export const store = configureStore(initialState);
 
 if (process.env.NODE_ENV === 'production') {
   module.exports = () => (
