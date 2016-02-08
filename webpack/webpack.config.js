@@ -5,7 +5,9 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const autoprefixer = require('autoprefixer');
 
-let entry, cssLoaders, jsLoaders = ['babel']
+let entry
+  , cssLoaders
+  , jsLoaders = ['babel']
   , plugins = [
     new webpack.ProvidePlugin({
       // Injects Root and configureStore based on NODE_ENV.

@@ -31,8 +31,8 @@ app.route('/api/polls')
   .get(Polls.getAll)
   .post(ensureAuthenticated, Polls.exists, (req, res) => {
     Users.get(req.user.username)
-      .then(renameme => {
-        renameme.addPoll(req.poll.name);
+      .then(userObj => {
+        userObj.addPoll(req.poll.name);
         req.poll.saveToDB();
         res.status(201).json(req.poll.format());
       })
@@ -45,10 +45,10 @@ app.route('/api/polls')
       })
   })
   .delete(ensureAuthenticated, (req, res) => {
-    Users.get(req.user.username).then(renameme => {
-      renameme.deletePoll(req.body.pollName);
+    Users.get(req.user.username).then(userObj => {
+      userObj.deletePoll(req.body.pollName);
       Polls.del(req.body.pollName);
-      res.json(renameme.username);
+      res.json(userObj.username);
     })
   });
 
@@ -67,9 +67,9 @@ app.put('/api/polls/vote', (req, res) => {
 app.get('/api/users', Users.getAll);
 
 app.post('/signup', Users.exists, (req, res) => {
-  req.renameme.encryptPassword().saveToDB();
-  req.login(req.renameme, (err) => {if (err) {console.log(err)}});
-  res.status(201).json(req.renameme.format());
+  req.userObj.encryptPassword().saveToDB();
+  req.login(req.userObj, (err) => {if (err) {console.log(err)}});
+  res.status(201).json(req.userObj.format());
 });
 
 app.post('/login', passport.authenticate('local'), (req, res) => {

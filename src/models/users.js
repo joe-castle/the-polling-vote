@@ -53,8 +53,8 @@ init.getAll = (req, res) => {
 };
 
 init.get = (username) => (
-  users.get(username).then(x => init(
-    x.username, x.name, x.password, x.ownPolls
+  users.get(username).then(userObj => init(
+    userObj.username, userObj.name, userObj.password, userObj.ownPolls
   ))
 )
 
@@ -64,7 +64,7 @@ init.exists = (req, res, next) => {
       if (exists) {
         res.status(409).send('A user with that username already exists, please try again.');
       } else {
-        req.renameme = init(
+        req.userObj = init(
           req.body.username,
           req.body.name,
           req.body.password
@@ -74,9 +74,9 @@ init.exists = (req, res, next) => {
     });
 };
 
-init.format = (renameme) => ({
-  username: renameme.username,
-  ownPolls: renameme.ownPolls
+init.format = (userObj) => ({
+  username: userObj.username,
+  ownPolls: userObj.ownPolls
 });
 
 module.exports = init;
