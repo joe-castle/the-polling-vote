@@ -1,5 +1,6 @@
 import * as types from './action-types';
 
+import {isFetching} from '../actions/is-fetching-actions';
 import {addAuthedUser} from './authed-user-actions';
 
 import {history} from '../routes/react';
@@ -21,8 +22,10 @@ export const clearLoginForm = () => ({
 
 export const loginUser = (username, password) => (
   dispatch => {
+    dispatch(isFetching(true));
     ajax('POST', {username, password}, '/login')
       .then(res => {
+        dispatch(isFetching(false));
         dispatch(addAuthedUser(res.username, res.name));
         dispatch(clearLoginForm());
         Materialize.toast(

@@ -6,6 +6,7 @@ import signupForm from './signup-form';
 import loginForm from './login-form';
 import pollForm from './poll-form';
 import authedUser from './authed-user';
+import isFetching from './is-fetching';
 
 export default combineReducers({
   polls,
@@ -13,5 +14,6 @@ export default combineReducers({
   signupForm,
   loginForm,
   pollForm,
-  authedUser
+  authedUser,
+  isFetching
 });

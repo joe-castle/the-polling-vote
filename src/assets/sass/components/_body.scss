@@ -1,0 +1,22 @@
+body {
+  position: relative;
+}
+
+.preloader-wrapper {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  z-index: 2;
+}
+.loader-bg {
+  position: absolute;
+  min-height: 100%;
+  min-width: 100%;
+  top: 0;
+  left: 0;
+  background-color: rgba(255,255,255,0.4);
+  z-index: 1;
+}

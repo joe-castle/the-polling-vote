@@ -1,4 +1,6 @@
 import * as types from './action-types';
+
+import {isFetching} from '../actions/is-fetching-actions';
 import {addOwnPoll, deleteOwnPoll} from './user-actions';
 import {clearPollForm, changePollFormType} from './poll-form-actions';
 import {removeAuthedUser} from './authed-user-actions';
@@ -37,8 +39,10 @@ export const changeSelectedOption = (pollName, option) => ({
 
 export const postAddPoll = (pollName, options) => (
   dispatch => {
+    dispatch(isFetching(true));
     ajax('POST', {pollName, options})
       .done(poll => {
+        dispatch(isFetching(false));
         poll.selectedOption = 'select';
         dispatch(addPoll(poll));
         dispatch(addOwnPoll(poll.submitter, poll.name));
@@ -54,8 +58,10 @@ export const postAddPoll = (pollName, options) => (
 
 export const postEditPoll = (pollName, newOptions) => (
   dispatch => {
+    dispatch(isFetching(true));
     ajax('PUT', {pollName, newOptions})
       .done(poll => {
+        dispatch(isFetching(false));
         dispatch(editPoll(poll.name, poll));
         dispatch(clearPollForm());
         Materialize.toast(
@@ -69,9 +75,10 @@ export const postEditPoll = (pollName, newOptions) => (
 
 export const postDeletePoll = (pollName) => (
   dispatch => {
+    dispatch(isFetching(true));
     ajax('DELETE', {pollName})
       .done(username => {
-        // Need to get authed user to delete
+        dispatch(isFetching(false));
         dispatch(deleteOwnPoll(username, pollName));
         dispatch(deletePoll(pollName));
         dispatch(changePollFormType('Add'));
@@ -83,8 +90,10 @@ export const postDeletePoll = (pollName) => (
 
 export const postVoteOnPoll = (pollName, option) => (
   dispatch => {
+    dispatch(isFetching(true));
     ajax('PUT', {pollName, option}, '/api/polls/vote')
       .done(() => {
+        dispatch(isFetching(false));
         dispatch(voteOnPoll(pollName, option));
         Materialize.toast(`Thanks for voting for '${option}'!`, 4000);
       })

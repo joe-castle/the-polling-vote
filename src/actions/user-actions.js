@@ -1,5 +1,6 @@
 import * as types from './action-types'
 
+import {isFetching} from '../actions/is-fetching-actions';
 import {addAuthedUser} from '../actions/authed-user-actions';
 import {clearSignupForm} from '../actions/signup-actions';
 
@@ -26,8 +27,10 @@ export const deleteOwnPoll = (username, pollName) => ({
 
 export const postAddUser = (username, name, password) => (
   dispatch => {
+    dispatch(isFetching(true));
     ajax('POST', {username, name, password}, '/signup')
       .done(res => {
+        dispatch(isFetching(false));
         dispatch(addUser(username, name));
         dispatch(addAuthedUser(username, name));
         dispatch(clearSignupForm());

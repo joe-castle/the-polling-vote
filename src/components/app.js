@@ -1,11 +1,14 @@
 import React, {cloneElement} from 'react';
+import {connect} from 'react-redux';
 
 import Navbar from '../components/navbar';
 import Footer from '../components/footer';
+import Preloader from '../components/preloader';
 
-export default ({
+const App = ({
   children,
-  location
+  location,
+  isFetching
 }) => {
   let baseColor = 'indigo';
   return (
@@ -15,6 +18,11 @@ export default ({
         {cloneElement(children, {baseColor})}
       </main>
       <Footer baseColor={baseColor}/>
+      {isFetching && <Preloader />}
     </div>
   )
 };
+
+export default connect(
+  state => ({isFetching: state.isFetching})
+)(App);
