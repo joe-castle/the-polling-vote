@@ -6,7 +6,7 @@ import formatUrl from '../utils/format-url';
 
 export const Users = (props) => {
   if (props.children) {
-    return cloneElement(props.children, {...props});
+    return cloneElement(props.children, props);
   } else {
     return props.users.length > 0 ?
       <div className='container'>

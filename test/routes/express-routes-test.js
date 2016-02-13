@@ -13,7 +13,7 @@ describe('Express Routes', () => {
   after(() => {
     client.flushdb();
   });
-  describe('To root path', () => {
+  describe('Get request to /', () => {
     it('Returns 200 status', (done) => {
       request(app)
         .get('/')
@@ -24,8 +24,9 @@ describe('Express Routes', () => {
         .get('/')
         .expect('Content-Type', /html/, done)
     });
+    it('Should return HTML with initial state')
   });
-  describe('To /signup', () => {
+  describe('Post request to /signup', () => {
     it('Should signup a new user and return their username/name', (done) => {
       request(app)
         .post('/signup')
@@ -49,7 +50,7 @@ describe('Express Routes', () => {
         .expect(400, done);
     });
   });
-  describe('To /login', () => {
+  describe('Post request to /login', () => {
     it(`Should login a user if their username and password is correct.
       Then return their username / name`, (done) => {
       request(app)
@@ -68,7 +69,7 @@ describe('Express Routes', () => {
         .expect(401, done);
     });
   });
-  describe('To /api/users', () => {
+  describe('Get reqeust to /api/users', () => {
     it('Should return an array of active users', (done) => {
       request(app)
         .get('/api/users')

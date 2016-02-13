@@ -6,13 +6,23 @@ import formatUrl from '../utils/format-url';
 
 export const Polls = (props) => {
   if (props.children) {
-    return cloneElement(props.children, {...props});
+    return cloneElement(props.children, props);
   } else {
     return props.polls.length > 0 ?
       <div className='container'>
         <div className='row'>
           <div className='col s12 m8 offset-m2 center'>
             <h1>Active Polls</h1>
+            <ul className='pagination'>
+              <li className='disabled'><a><i className='material-icons'>chevron_left</i></a></li>
+              {props.polls.map((x, i) => (
+                <li
+                  key={i}
+                  className=''><a href='#'>{i+1}</a></li>
+              ))}
+              <li className='disabled'><a><i className='material-icons'>chevron_right</i></a></li>
+            </ul>
+            <div className='divider'/>
             <div className='collection'>
               {props.polls.map((x, i) => (
                 <Link
