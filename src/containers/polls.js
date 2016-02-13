@@ -4,6 +4,7 @@ import {Link} from 'react-router';
 import classNames from 'classNames';
 
 import formatUrl from '../utils/format-url';
+import pageFilter, {nodesPerPage} from '../utils/page-filter';
 
 import {
   changePollsPage,
@@ -12,7 +13,7 @@ import {
 
 export class Polls extends Component {
   pagination = () => {
-    this.pages = Math.ceil(this.props.polls.length / 5)
+    this.pages = Math.ceil(this.props.polls.length / nodesPerPage)
     let nodes = [];
     for (let i = 1; i <= this.pages; i++) {
       nodes.push(
@@ -96,13 +97,6 @@ export class Polls extends Component {
     }
   };
 }
-
-const pageFilter = (polls, pageNumber) => (
-  polls.slice(
-    pageNumber * 5 - 5,
-    pageNumber * 5
-  )
-)
 
 export default connect(
   state => ({
