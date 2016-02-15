@@ -3,6 +3,14 @@ import {connect} from 'react-redux';
 import {Link} from 'react-router';
 
 import formatUrl from '../utils/format-url';
+import pageFilter from '../utils/page-filter';
+
+import {
+  changeUsersPage,
+  nextUsersPage,
+  previousUsersPage} from '../actions/users-page-actions';
+
+import Pagination from '../components/pagination';
 
 export const Users = (props) => {
   if (props.children) {
@@ -13,8 +21,17 @@ export const Users = (props) => {
         <div className='row'>
           <div className='col s12 m8 offset-m2 center'>
             <h1>Active Users</h1>
+              <Pagination
+                baseColor={props.baseColor}
+                pageNumber={props.usersPage}
+                totalNodes={props.users.length}
+                next={() => props.dispatch(nextUsersPage())}
+                previous={() => props.dispatch(previousUsersPage())}
+                change={(pageNumber) => props.dispatch(changeUsersPage(pageNumber))}
+              />
+            <div className='divider'/>
             <div className='collection'>
-              {props.users.map((x, i) => (
+              {props.pagedUsers.map((x, i) => (
                 <Link
                   key={i}
                   to={`/users/${x.username}`}
@@ -39,6 +56,8 @@ export default connect(
     users: state.users,
     polls: state.polls,
     pollForm: state.pollForm,
+    usersPage: state.usersPage,
+    pagedUsers: pageFilter(state.users, state.usersPage),
     authedUser: state.authedUser.username
   })
 )(Users);
