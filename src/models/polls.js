@@ -73,13 +73,11 @@ init.exists = (req, res, next) => {
     });
 };
 
-init.format = (poll) => {
-  return {
-    name: poll.name,
-    options: poll.options,
-    submitter: poll.submitter
-  }
-};
+init.format = (poll) => ({
+  name: poll.name,
+  options: poll.options,
+  submitter: poll.submitter
+});
 
 init.formatOptions = (newOptions, oldOptions) => (
   newOptions.reduce((x, y) => {

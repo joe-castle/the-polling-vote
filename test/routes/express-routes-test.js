@@ -4,6 +4,8 @@ import request from 'supertest';
 import {expect} from 'chai';
 
 import client from '../../src/data/client';
+import Users from '../../src/models/users';
+import Polls from '../../src/models/polls';
 import app from '../../src/routes/express-config';
 
 describe('Express Routes', () => {
@@ -32,10 +34,7 @@ describe('Express Routes', () => {
         .post('/signup')
         .send({username: 'unchained', name: 'django', password: 'password'})
         .expect(201)
-        .expect(res => {
-          expect(res.body).to.deep.equal({username: 'unchained', name:'django'})
-        })
-        .end(done);
+        .expect({username: 'unchained', name:'django'}, done);
     });
     it('Should return a 409 status error if the username already exists', (done) => {
       request(app)
@@ -57,10 +56,7 @@ describe('Express Routes', () => {
         .post('/login')
         .send({username: 'unchained', password: 'password'})
         .expect(200)
-        .expect(res => {
-          expect(res.body).to.deep.equal({username: 'unchained', name:'django'})
-        })
-        .end(done);
+        .expect({username: 'unchained', name:'django'}, done);
     });
     it('Should return a 401 error if either the username or passwrod is incorrect', (done) => {
       request(app)
@@ -70,12 +66,47 @@ describe('Express Routes', () => {
     });
   });
   describe('Get reqeust to /api/users', () => {
-    it('Should return an array of active users', (done) => {
+    before(() => {
+      client.flushdb()
+    });
+    it('Should retrun no data found when there are no active users', (done) => {
+      request(app)
+        .get('/api/users')
+        .expect(200)
+        .expect({'no-data': 'No active users found'}, done)
+    })
+    it(`Should return an array of active users, containing only their
+      username and created polls`, (done) => {
+      let user = Users('unchained', 'django', 'password').saveToDB();
       request(app)
         .get('/api/users')
         .expect(200)
         .expect(res => {
           expect(res.body).to.be.an('array')
+          expect(res.body[0]).to.deep.equal(Users.format(user))
+        })
+        .end(done)
+    });
+  });
+  describe('Get request to /api/polls', () => {
+    before(() => {
+      client.flushdb()
+    });
+    it('Should return no data found when there are no active polls', (done) => {
+      request(app)
+        .get('/api/polls')
+        .expect(200)
+        .expect({'no-data': 'No active polls found'}, done)
+    });
+    it(`Should return an array of active polls,
+      containing only it's name, options and submitter`, (done) => {
+      let poll = Polls('A New Poll', {yes: 0, no: 0}, 'unchained').saveToDB();
+      request(app)
+        .get('/api/polls')
+        .expect(200)
+        .expect(res => {
+          expect(res.body).to.be.an('array')
+          expect(res.body[0]).to.deep.equal(Polls.format(poll))
         })
         .end(done)
     });
