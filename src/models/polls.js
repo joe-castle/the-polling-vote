@@ -58,7 +58,7 @@ init.getAll = (req, res) => {
 };
 
 init.exists = (req, res, next) => {
-  polls.exists(req.body.pollName)
+  polls.exists(init.toCamelCase(req.body.pollName))
     .then(exists => {
       if (exists) {
         res.status(409).send('A poll with that name already exists, please try again.');

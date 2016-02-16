@@ -3,7 +3,7 @@
 const router = require('express').Router();
 
 const renderHtmlWithInitialState = require('../template/render-html-with-initialstate');
-const ensureAuthenticated = require('../middleware').ensureAuthenticated;
+const mw = require('../middleware');
 const passport = require('../strategies/local');
 
 const Users = require('../models/users');
@@ -11,7 +11,7 @@ const Polls = require('../models/polls');
 
 router.route('/api/polls')
   .get(Polls.getAll)
-  .post(ensureAuthenticated, Polls.exists, (req, res) => {
+  .post(mw.ensureAuthenticated, mw.testDetails, Polls.exists, (req, res) => {
     Users.get(req.user.username)
       .then(userObj => {
         userObj.addPoll(req.poll.name);
@@ -19,19 +19,20 @@ router.route('/api/polls')
         res.status(201).json(req.poll.format());
       })
   })
-  .put(ensureAuthenticated, (req, res) => {
+  .put(mw.ensureAuthenticated, mw.testDetails, (req, res) => {
     Polls.get(req.body.pollName)
       .then(poll => {
         poll.edit(req.body.newOptions);
         res.json(poll);
       })
   })
-  .delete(ensureAuthenticated, (req, res) => {
-    Users.get(req.user.username).then(userObj => {
-      userObj.deletePoll(req.body.pollName);
-      Polls.del(req.body.pollName);
-      res.json(userObj.username);
-    })
+  .delete(mw.ensureAuthenticated, mw.testDetails, (req, res) => {
+    Users.get(req.user.username).
+      then(userObj => {
+        userObj.deletePoll(req.body.pollName);
+        Polls.del(req.body.pollName);
+        res.json(userObj.username);
+      })
   });
 
 router.put('/api/polls/vote', (req, res) => {
