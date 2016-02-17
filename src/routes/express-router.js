@@ -23,7 +23,10 @@ router.route('/api/polls')
     Polls.get(req.body.pollName)
       .then(poll => {
         poll.edit(req.body.newOptions);
-        res.json(poll);
+        res.json(poll.format());
+      })
+      .catch(err => {
+        res.status(400).send('Unable to find poll, please check the name and try agian');
       })
   })
   .delete(mw.ensureAuthenticated, mw.testDetails, (req, res) => {

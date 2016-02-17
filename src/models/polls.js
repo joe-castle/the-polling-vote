@@ -58,6 +58,7 @@ init.getAll = (req, res) => {
 };
 
 init.exists = (req, res, next) => {
+  if (typeof req === 'string') {return polls.exists(init.toCamelCase(req))}
   polls.exists(init.toCamelCase(req.body.pollName))
     .then(exists => {
       if (exists) {

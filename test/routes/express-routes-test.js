@@ -4,7 +4,6 @@ import request from 'supertest';
 import {expect} from 'chai';
 
 import client from '../../src/data/client';
-import actions from '../../src/data/actions';
 import Users from '../../src/models/users';
 import Polls from '../../src/models/polls';
 import app from '../../src/routes/express-config';
@@ -121,7 +120,7 @@ describe('Express Routes', () => {
   describe('Post request to /api/polls', () => {
     beforeEach(() => {
       Users('unchained', 'django', 'password').saveToDB();
-    })
+    });
     it(`Should return a 201 status - and the formatted poll -
       if the poll doesn't exist`, (done) => {
       let expectedResponse = {
@@ -132,6 +131,7 @@ describe('Express Routes', () => {
         },
         submitter: 'unchained'
       };
+
       agent.post('/api/polls')
         .send({pollName: 'A New Poll', options: ['yes', 'no']})
         .expect(201)
@@ -144,6 +144,58 @@ describe('Express Routes', () => {
       agent.post('/api/polls')
         .send({pollName: 'A New Poll', options: ['yes', 'no']})
         .expect(409, done);
+    });
+  });
+  describe('Put request to /api/polls', () => {
+    beforeEach(() => {
+      Users('unchained', 'django', 'password').saveToDB();
+    });
+    it('Should return the edited poll', (done) => {
+      Polls('A New Poll', {yes: 0, no: 0}, 'unchained')
+        .saveToDB();
+
+      const editedPoll = {
+        pollName: 'A New Poll',
+        newOptions: ['yes', 'no', 'maybe']
+      }
+      const expectedResponse = {
+        name: 'A New Poll',
+        options: {
+          yes: 0, no: 0, maybe: 0
+        },
+        submitter: 'unchained'
+      }
+      agent.put('/api/polls')
+        .send(editedPoll)
+        .expect(expectedResponse, done)
+    })
+    it('Should return 400 if the poll doesn\'t exist', (done) => {
+      agent.put('/api/polls')
+        .send({pollName: 'fakename'})
+        .expect(400)
+        .expect('Unable to find poll, please check the name and try agian', done);
+    });
+  });
+  describe('Delete request to /api/polls', () => {
+    beforeEach(() => {
+      Users('unchained', 'django', 'password').saveToDB();
+    });
+    it('It should delete the poll if it exists and return the username', (done) => {
+      Polls('A New Poll', {yes: 0, no: 0}, 'unchained')
+        .saveToDB();
+
+      agent.delete('/api/polls')
+        .send({pollName: 'A New Poll'})
+        .end((err, res) => {
+          expect(res.status).to.equal(200);
+          expect(res.body).to.equal('unchained');
+          Polls.exists('A New Poll')
+            .then(exists => {
+              expect(exists).to.equal(0)
+              done();
+            })
+          }
+        )
     });
   });
 });
