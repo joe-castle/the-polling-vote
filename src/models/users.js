@@ -28,10 +28,12 @@ class User {
   addPoll(pollName) {
     this.ownPolls.push(pollName);
     this.saveToDB();
+    return this;
   }
   deletePoll(pollName) {
     this.ownPolls = this.ownPolls.filter(x => x !== pollName);
     this.saveToDB();
+    return this;
   }
 }
 

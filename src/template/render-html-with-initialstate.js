@@ -9,8 +9,8 @@ module.exports = (req, res) => {
     Users.getAll().then(users => {
       let initialState = {}
       if (req.user) {initialState.authedUser = req.user}
-      if (polls) {initialState.polls = polls.map(x => Polls.format(x))}
-      if (users) {initialState.users = users.map(x => Users.format(x))}
+      if (polls) {initialState.polls = polls.map(Polls.format)}
+      if (users) {initialState.users = users.map(Users.format)}
       res.send(template(initialState));
     })
   })

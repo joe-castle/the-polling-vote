@@ -12,11 +12,13 @@ class Poll {
   edit(newOptions) {
     this.options = init.formatOptions(newOptions, this.options)
     this.saveToDB();
+    return this;
   }
   vote(option, ip) {
     this.options[option] += 1;
     this.voted.push(ip);
     this.saveToDB();
+    return this;
   }
   hasVoted(ip) {
     return this.voted.find(x => x === ip)

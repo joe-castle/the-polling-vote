@@ -45,7 +45,7 @@ router.put('/api/polls/vote', (req, res) => {
         res.status(409).send('Sorry, you can only vote on a poll once.');
       } else {
         poll.vote(req.body.option, req.ip);
-        res.json(poll);
+        res.json(Polls.format(poll));
       }
     })
 });

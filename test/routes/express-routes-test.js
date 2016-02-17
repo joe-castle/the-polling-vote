@@ -137,6 +137,17 @@ describe('Express Routes', () => {
         .expect(201)
         .expect(expectedResponse, done);
     });
+    it('Should save the poll to the database', (done) => {
+      agent.post('/api/polls')
+        .send({pollName: 'A New Poll', options: ['yes', 'no']})
+        .end((err, res) => {
+          Polls.exists('A New Poll')
+            .then(exists => {
+              expect(exists).to.equal(1);
+              done();
+            })
+        });
+    })
     it('Should return a 409 status if the poll already exists', (done) => {
       Polls('A New Poll', {yes: 0, no: 0}, 'unchained')
         .saveToDB();
@@ -196,6 +207,38 @@ describe('Express Routes', () => {
             })
           }
         )
+    });
+  });
+  describe('Put request to /api/polls/vote', () => {
+    beforeEach(() => {
+      Users('unchained', 'django', 'password').saveToDB();
+    });
+    it('Should return the poll with the updated vote count', (done) => {
+      Polls('A New Poll', {yes: 0, no: 0}, 'unchained')
+        .saveToDB();
+
+      const expectedResponse = {
+        name: 'A New Poll',
+        options: {
+          no: 0,
+          yes: 1
+        },
+        submitter: 'unchained'
+      }
+
+      agent.put('/api/polls/vote')
+        .send({pollName: 'A New Poll', option: 'yes'})
+        .expect(200)
+        .expect(expectedResponse, done)
+    });
+    it('Should return a 409 error if someone has already voted on a poll', (done) => {
+      Polls('A New Poll', {yes: 0, no: 0}, 'unchained')
+        .vote('yes', '::ffff:127.0.0.1')
+        .saveToDB();
+
+      agent.put('/api/polls/vote')
+        .send({pollName: 'A New Poll', option: 'yes'})
+        .expect(409, done)
     });
   });
 });
