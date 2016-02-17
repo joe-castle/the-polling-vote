@@ -23,7 +23,20 @@ describe('Express Routes', () => {
       agent.get('/')
         .expect('Content-Type', /html/, done)
     });
-    it('Should return HTML with initial state')
+    it('Should return HTML with initial state', (done) => {
+      const user = Users('unchained', 'django', 'password')
+        .saveToDB();
+      const poll = Polls('A New Poll', {yes: 0, no: 0}, 'unchained')
+        .saveToDB();
+
+      agent.get('/')
+        .end((err, res) => {
+          expect(res.text).to.contain('window.__INITIAL_STATE__');
+          expect(res.text).to.contain(JSON.stringify(Users.format(user)));
+          expect(res.text).to.contain(JSON.stringify(poll.format()));
+          done();
+        })
+    });
   });
   describe('Post request to /signup', () => {
     const newUser = Users('unchained', 'django', 'password');
