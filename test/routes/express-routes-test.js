@@ -197,7 +197,7 @@ describe('Express Routes', () => {
       agent.put('/api/polls')
         .send({pollName: 'fakename'})
         .expect(400)
-        .expect('Unable to find poll, please check the name and try agian', done);
+        .expect('Unable to find poll, please check the name and try again', done);
     });
   });
   describe('Delete request to /api/polls', () => {
