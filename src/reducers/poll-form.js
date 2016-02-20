@@ -25,11 +25,6 @@ export default (state = initialState, {
         ...state,
         name
       };
-    case types.INSERT_POLL_FORM_OPTIONS:
-      return {
-        ...state,
-        options
-      }
     case types.CHANGE_POLL_FORM_OPTION:
       return {
         ...state,
@@ -54,6 +49,11 @@ export default (state = initialState, {
           ...state.options.slice(0, index),
           ...state.options.slice(index+1)
         ]
+      };
+    case types.INSERT_POLL_FORM_OPTIONS:
+      return {
+        ...state,
+        options
       };
     case types.CLEAR_POLL_FORM:
       return initialState;

@@ -105,6 +105,104 @@ describe('Redux Reducers', () => {
         password: ''
       };
       expect(loginForm(startingState, payload)).to.deep.equal(expectedResponse);
-    })
+    });
+  });
+  describe('Poll Form', () => {
+    it('Returns the initial state', () => {
+      const expectedResponse = {
+        formType: 'Add',
+        name: '',
+        options: ['', '']
+      };
+      expect(pollForm(undefined, {})).to.deep.equal(expectedResponse);
+    });
+    it('Changes the form type', () => {
+      const payload = {
+        type: types.CHANGE_POLL_FORM_TYPE,
+        formType: 'Edit'
+      };
+      const expectedResponse = {
+        formType: 'Edit',
+        name: '',
+        options: ['', '']
+      };
+      expect(pollForm(undefined, payload)).to.deep.equal(expectedResponse);
+    });
+    it('Changes the poll name', () => {
+      const payload = {
+        type: types.CHANGE_POLL_FORM_NAME,
+        name: 'A New Poll'
+      };
+      const expectedResponse = {
+        formType: 'Add',
+        name: 'A New Poll',
+        options: ['', '']
+      };
+      expect(pollForm(undefined, payload)).to.deep.equal(expectedResponse);
+    });
+    it('Changes the an option on the poll', () => {
+      const payload = {
+        type: types.CHANGE_POLL_FORM_OPTION,
+        value: 'yes',
+        index: 1
+      };
+      const expectedResponse = {
+        formType: 'Add',
+        name: '',
+        options: ['', 'yes']
+      };
+      expect(pollForm(undefined, payload)).to.deep.equal(expectedResponse);
+    });
+    it('Adds an extra option to the form', () => {
+      const payload = {
+        type: types.ADD_POLL_FORM_OPTIONS_INPUT
+      };
+      const expectedResponse = {
+        formType: 'Add',
+        name: '',
+        options: ['', '', '']
+      };
+      expect(pollForm(undefined, payload)).to.deep.equal(expectedResponse);
+    });
+    it('Removes an option from the poll form', () => {
+      const payload = {
+        type: types.REMOVE_POLL_FORM_OPTIONS_INPUT,
+        index: 1
+      };
+      const expectedResponse = {
+        formType: 'Add',
+        name: '',
+        options: ['']
+      };
+      expect(pollForm(undefined, payload)).to.deep.equal(expectedResponse);
+    });
+    it('Inserts options into the poll form when editing', () => {
+      const payload = {
+        type: types.INSERT_POLL_FORM_OPTIONS,
+        options: ['yes', 'no']
+      };
+      const expectedResponse = {
+        formType: 'Add',
+        name: '',
+        options: ['yes', 'no']
+      };
+      expect(pollForm(undefined, payload)).to.deep.equal(expectedResponse);
+    });
+    it('Inserts options into the poll form when editing', () => {
+      const payload = {
+        type: types.CLEAR_POLL_FORM
+      };
+      const startingState = {
+        formType: 'Edit',
+        name: 'A New Poll',
+        options: ['yes', 'no']
+      };
+      const expectedResponse = {
+        formType: 'Add',
+        name: '',
+        options: ['', '']
+      };
+      expect(pollForm(undefined, payload)).to.deep.equal(expectedResponse);
+    });
   });
 });
