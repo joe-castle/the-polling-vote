@@ -11,52 +11,15 @@ const Polls = require('../models/polls');
 
 router.route('/api/polls')
   .get(Polls.getAll)
-  .post(mw.ensureAuthenticated, mw.testDetails, Polls.exists, (req, res) => {
-    Users.get(req.user.username)
-      .then(userObj => {
-        userObj.addPoll(req.poll.name);
-        req.poll.saveToDB();
-        res.status(201).json(req.poll.format());
-      })
-  })
-  .put(mw.ensureAuthenticated, mw.testDetails, (req, res) => {
-    Polls.get(req.body.pollName)
-      .then(poll => {
-        poll.edit(req.body.newOptions);
-        res.json(poll.format());
-      })
-      .catch(err => {
-        res.status(400).send('Unable to find poll, please check the name and try again');
-      })
-  })
-  .delete(mw.ensureAuthenticated, mw.testDetails, (req, res) => {
-    Users.get(req.user.username).
-      then(userObj => {
-        userObj.deletePoll(req.body.pollName);
-        Polls.del(req.body.pollName);
-        res.json(userObj.username);
-      })
-  });
+  .post(mw.ensureAuthenticated, mw.testDetails, Polls.create)
+  .put(mw.ensureAuthenticated, mw.testDetails, Polls.edit)
+  .delete(mw.ensureAuthenticated, mw.testDetails, Polls.delete)
 
-router.put('/api/polls/vote', (req, res) => {
-  Polls.get(req.body.pollName)
-    .then(poll => {
-      if (poll.hasVoted(req.ip)) {
-        res.status(409).send('Sorry, you can only vote on a poll once.');
-      } else {
-        poll.vote(req.body.option, req.ip);
-        res.json(Polls.format(poll));
-      }
-    })
-});
+router.put('/api/polls/vote', Polls.vote);
 
 router.get('/api/users', Users.getAll);
 
-router.post('/signup', Users.exists, (req, res) => {
-  req.userObj.encryptPassword().saveToDB();
-  req.login(req.userObj, (err) => {if (err) {console.log(err)}});
-  res.status(201).json(req.userObj.format());
-});
+router.post('/signup', Users.create);
 
 router.post('/login', passport.authenticate('local'), (req, res) => {
   res.json(req.user);

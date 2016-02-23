@@ -58,30 +58,33 @@ init.get = (username) => (
   users.get(username).then(user => init(
     user.username, user.name, user.password, user.ownPolls
   ))
-)
+);
 
-init.exists = (req, res, next) => {
+init.create = (req, res, next) => {
   if (!req.body.username || !req.body.name || !req.body.password) {
     res.status(400).send('Please provide a username, name and password to signup.');
+  } else {
+    users.exists(req.body.username)
+      .then(exists => {
+        if (exists) {
+          res.status(409).send('A user with that username already exists, please try again.');
+        } else {
+          const user = init(
+            req.body.username,
+            req.body.name,
+            req.body.password
+          );
+          user.encryptPassword().saveToDB();
+          req.login(user, (err) => {if (err) {console.log(err)}});
+          res.status(201).json(user.format());
+        }
+      });
   }
-  users.exists(req.body.username)
-    .then(exists => {
-      if (exists) {
-        res.status(409).send('A user with that username already exists, please try again.');
-      } else {
-        req.userObj = init(
-          req.body.username,
-          req.body.name,
-          req.body.password
-        );
-        next();
-      }
-    });
 };
 
-init.format = (userObj) => ({
-  username: userObj.username,
-  ownPolls: userObj.ownPolls
+init.format = (user) => ({
+  username: user.username,
+  ownPolls: user.ownPolls
 });
 
 module.exports = init;

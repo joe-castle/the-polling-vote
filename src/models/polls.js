@@ -1,6 +1,7 @@
 'use strict';
 
 const polls = require('../data/actions')('polls');
+const Users = require('./users');
 
 class Poll {
   constructor(name, options, submitter, voted) {
@@ -42,13 +43,30 @@ const init = (
 );
 
 init.get = (pollName) => (
-  polls.get(init.toCamelCase(pollName)).then(poll => init(
-    poll.name, poll.options, poll.submitter, poll.voted
-  ))
+  polls.get(init.toCamelCase(pollName))
+    .then(poll => init(
+      poll.name, poll.options, poll.submitter, poll.voted
+    ))
 );
 
-init.del = (pollName) => {
-  polls.del(init.toCamelCase(pollName));
+init.edit = (req, res) => {
+  init.get(req.body.pollName)
+    .then(poll => {
+      poll.edit(req.body.newOptions);
+      res.json(poll.format());
+    })
+    .catch(err => {
+      res.status(400).send('Unable to find poll, please check the name and try again');
+    })
+}
+
+init.delete = (req, res) => {
+  Users.get(req.user.username).
+    then(user => {
+      user.deletePoll(req.body.pollName);
+      polls.del(init.toCamelCase(req.body.pollName));
+      res.json(user.username);
+    })
 }
 
 init.getAll = (req, res) => {
@@ -59,22 +77,42 @@ init.getAll = (req, res) => {
   });
 };
 
-init.exists = (req, res, next) => {
-  if (typeof req === 'string') {return polls.exists(init.toCamelCase(req))}
-  polls.exists(init.toCamelCase(req.body.pollName))
+init.exists = (pollName) => (
+  polls.exists(init.toCamelCase(pollName))
+);
+
+init.create = (req, res) => {
+  init.exists(req.body.pollName)
     .then(exists => {
       if (exists) {
         res.status(409).send('A poll with that name already exists, please try again.');
       } else {
-        req.poll = init(
+        const poll = init(
           req.body.pollName,
           init.formatOptions(req.body.options, {}),
           req.user.username
         );
-        next();
+        Users.get(req.user.username)
+          .then(user => {
+            user.addPoll(poll.name);
+            poll.saveToDB();
+            res.status(201).json(poll.format());
+          })
       }
     });
 };
+
+init.vote = (req, res) => {
+  init.get(req.body.pollName)
+    .then(poll => {
+      if (poll.hasVoted(req.ip)) {
+        res.status(409).send('Sorry, you can only vote on a poll once.');
+      } else {
+        poll.vote(req.body.option, req.ip);
+        res.json(init.format(poll));
+      }
+    })
+}
 
 init.format = (poll) => ({
   name: poll.name,
