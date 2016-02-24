@@ -205,4 +205,183 @@ describe('Redux Reducers', () => {
       expect(pollForm(undefined, payload)).to.deep.equal(expectedResponse);
     });
   });
+  describe('Polls Page', () => {
+    it('Returns the initial state', () => {
+      expect(pollsPage(undefined, {})).to.equal(1);
+    });
+    it('Changes the polls page to the passed in number', () => {
+      const payload = {
+        type: types.CHANGE_POLLS_PAGE,
+        pageNumber: 4
+      };
+      expect(pollsPage(undefined, payload)).to.equal(4);
+    });
+    it('Changes the polls page to the next page', () => {
+      const payload = {
+        type: types.NEXT_POLLS_PAGE
+      };
+      expect(pollsPage(undefined, payload)).to.equal(2);
+    });
+    it('Changes the polls page to the previous page', () => {
+      const payload = {
+        type: types.PREVIOUS_POLLS_PAGE
+      };
+      expect(pollsPage(10, payload)).to.equal(9);
+    });
+  });
+  describe('Polls', () => {
+    it('Returns the initial state', () => {
+      expect(polls(undefined, {})).to.be.an('array');
+      expect(polls(undefined, {})).to.have.lengthOf(0);
+    });
+    it('Adds a poll', () => {
+      const payload = {
+        type: types.ADD_POLL,
+        payload: {
+          name: 'A New Poll',
+          options: {
+            yes: 0,
+            no: 0
+          },
+          submitter: 'unchained'
+        }
+      };
+      const expectedResponse = [{
+        name: 'A New Poll',
+        options: {
+          yes: 0,
+          no: 0
+        },
+        submitter: 'unchained'
+      }];
+      expect(polls(undefined, payload)).to.deep.equal(expectedResponse);
+    });
+    it('Deletes a poll', () => {
+      const payload = {
+        type: types.DELETE_POLL,
+        pollName: 'A New Poll 1'
+      };
+      const startingState = [{
+        name: 'A New Poll',
+        options: {
+          yes: 0,
+          no: 0
+        },
+        submitter: 'unchained'
+      },{
+        name: 'A New Poll 1',
+        options: {
+          yes: 0,
+          no: 0
+        },
+        submitter: 'unchained'
+      },{
+        name: 'A New Poll 2',
+        options: {
+          yes: 0,
+          no: 0
+        },
+        submitter: 'unchained'
+      }];
+      const expectedResponse = [{
+        name: 'A New Poll',
+        options: {
+          yes: 0,
+          no: 0
+        },
+        submitter: 'unchained'
+      },{
+        name: 'A New Poll 2',
+        options: {
+          yes: 0,
+          no: 0
+        },
+        submitter: 'unchained'
+      }];
+      expect(polls(startingState, payload)).to.deep.equal(expectedResponse);
+    });
+    it('Edits a poll', () => {
+      const payload = {
+        type: types.EDIT_POLL,
+        pollName: 'A New Poll',
+        payload: {
+          name: 'A New Poll',
+          options: {
+            yes: 0,
+            no: 1,
+            howdy: 0
+          },
+          submitter: 'unchained'
+        }
+      };
+      const startingState = [{
+        name: 'A New Poll',
+        options: {
+          yes: 0,
+          no: 1
+        },
+        submitter: 'unchained'
+      }];
+      const expectedResponse = [{
+        name: 'A New Poll',
+        options: {
+          yes: 0,
+          no: 1,
+          howdy: 0
+        },
+        submitter: 'unchained'
+      }];
+      expect(polls(startingState, payload)).to.deep.equal(expectedResponse);
+    });
+    it('Changes the polls selected option', () => {
+    const payload = {
+      type: types.CHANGE_SELECTED_OPTION,
+      pollName: 'A New Poll',
+      option: 'yes'
+    };
+    const startingState = [{
+      name: 'A New Poll',
+      options: {
+        yes: 0,
+        no: 0
+      },
+      submitter: 'unchained',
+      selectedOption: 'select'
+    }];
+    const expectedResponse = [{
+      name: 'A New Poll',
+      options: {
+        yes: 0,
+        no: 0
+      },
+      submitter: 'unchained',
+      selectedOption: 'yes'
+    }];
+    expect(polls(startingState, payload)).to.deep.equal(expectedResponse);
+    });
+    it('Votes on a poll', () => {
+      const payload = {
+        type: types.VOTE_ON_POLL,
+        pollName: 'A New Poll',
+        option: 'yes'
+      };
+      const startingState = [{
+        name: 'A New Poll',
+        options: {
+          yes: 0,
+          no: 0
+        },
+        submitter: 'unchained'
+      }];
+      const expectedResponse = [{
+        name: 'A New Poll',
+        options: {
+          yes: 1,
+          no: 0
+        },
+        submitter: 'unchained'
+      }];
+      expect(polls(startingState, payload)).to.deep.equal(expectedResponse);
+    });
+  });
 });

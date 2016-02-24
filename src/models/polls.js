@@ -11,7 +11,7 @@ class Poll {
     this.voted = voted || [];
   }
   edit(newOptions) {
-    this.options = init.formatOptions(newOptions, this.options)
+    this.options = Polls.formatOptions(newOptions, this.options)
     this.saveToDB();
     return this;
   }
@@ -25,15 +25,15 @@ class Poll {
     return this.voted.find(x => x === ip)
   }
   format() {
-    return init.format(this);
+    return Polls.format(this);
   }
   saveToDB() {
-    polls.set(init.toCamelCase(this.name), this);
+    polls.set(Polls.toCamelCase(this.name), this);
     return this;
   }
 }
 
-const init = (
+const Polls = (
   name,
   options,
   submitter,
@@ -42,15 +42,15 @@ const init = (
   new Poll(name, options, submitter, voted)
 );
 
-init.get = (pollName) => (
-  polls.get(init.toCamelCase(pollName))
-    .then(poll => init(
+Polls.get = (pollName) => (
+  polls.get(Polls.toCamelCase(pollName))
+    .then(poll => Polls(
       poll.name, poll.options, poll.submitter, poll.voted
     ))
 );
 
-init.edit = (req, res) => {
-  init.get(req.body.pollName)
+Polls.edit = (req, res) => {
+  Polls.get(req.body.pollName)
     .then(poll => {
       poll.edit(req.body.newOptions);
       res.json(poll.format());
@@ -60,36 +60,36 @@ init.edit = (req, res) => {
     })
 }
 
-init.delete = (req, res) => {
+Polls.delete = (req, res) => {
   Users.get(req.user.username).
     then(user => {
       user.deletePoll(req.body.pollName);
-      polls.del(init.toCamelCase(req.body.pollName));
+      polls.del(Polls.toCamelCase(req.body.pollName));
       res.json(user.username);
     })
 }
 
-init.getAll = (req, res) => {
+Polls.getAll = (req, res) => {
   if (!req) {return polls.getAll()}
   polls.getAll().then(polls => {
-    if (polls) {polls = polls.map(init.format)}
+    if (polls) {polls = polls.map(Polls.format)}
     res.json(polls || {'no-data': 'No active polls found'})
   });
 };
 
-init.exists = (pollName) => (
-  polls.exists(init.toCamelCase(pollName))
+Polls.exists = (pollName) => (
+  polls.exists(Polls.toCamelCase(pollName))
 );
 
-init.create = (req, res) => {
-  init.exists(req.body.pollName)
+Polls.create = (req, res) => {
+  Polls.exists(req.body.pollName)
     .then(exists => {
       if (exists) {
         res.status(409).send('A poll with that name already exists, please try again.');
       } else {
-        const poll = init(
+        const poll = Polls(
           req.body.pollName,
-          init.formatOptions(req.body.options, {}),
+          Polls.formatOptions(req.body.options, {}),
           req.user.username
         );
         Users.get(req.user.username)
@@ -102,25 +102,25 @@ init.create = (req, res) => {
     });
 };
 
-init.vote = (req, res) => {
-  init.get(req.body.pollName)
+Polls.vote = (req, res) => {
+  Polls.get(req.body.pollName)
     .then(poll => {
       if (poll.hasVoted(req.ip)) {
         res.status(409).send('Sorry, you can only vote on a poll once.');
       } else {
         poll.vote(req.body.option, req.ip);
-        res.json(init.format(poll));
+        res.json(Polls.format(poll));
       }
     })
 }
 
-init.format = (poll) => ({
+Polls.format = (poll) => ({
   name: poll.name,
   options: poll.options,
   submitter: poll.submitter
 });
 
-init.formatOptions = (newOptions, oldOptions) => (
+Polls.formatOptions = (newOptions, oldOptions) => (
   newOptions.reduce((x, y) => {
     if (y) {
       return Object.assign(x, {[y]: oldOptions[y] || 0})
@@ -129,7 +129,7 @@ init.formatOptions = (newOptions, oldOptions) => (
   }, {})
 )
 
-init.toCamelCase = (name) => (
+Polls.toCamelCase = (name) => (
   name.trim()
     .toLowerCase()
     .replace(/[^\s[a-z]/ig, '')
@@ -139,4 +139,4 @@ init.toCamelCase = (name) => (
     )
 )
 
-module.exports = init;
+module.exports = Polls;

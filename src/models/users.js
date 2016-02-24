@@ -37,7 +37,7 @@ class User {
   }
 }
 
-const init = (
+const Users = (
   username,
   name,
   password,
@@ -46,21 +46,21 @@ const init = (
   new User(username, name, password, ownPolls)
 );
 
-init.getAll = (req, res) => {
+Users.getAll = (req, res) => {
   if (!req) {return users.getAll()}
   users.getAll().then(users => {
-    if (users) {users = users.map(init.format)}
+    if (users) {users = users.map(Users.format)}
     res.json(users || {'no-data': 'No active users found'})
   });
 };
 
-init.get = (username) => (
-  users.get(username).then(user => init(
+Users.get = (username) => (
+  users.get(username).then(user => Users(
     user.username, user.name, user.password, user.ownPolls
   ))
 );
 
-init.create = (req, res, next) => {
+Users.create = (req, res, next) => {
   if (!req.body.username || !req.body.name || !req.body.password) {
     res.status(400).send('Please provide a username, name and password to signup.');
   } else {
@@ -69,7 +69,7 @@ init.create = (req, res, next) => {
         if (exists) {
           res.status(409).send('A user with that username already exists, please try again.');
         } else {
-          const user = init(
+          const user = Users(
             req.body.username,
             req.body.name,
             req.body.password
@@ -82,9 +82,9 @@ init.create = (req, res, next) => {
   }
 };
 
-init.format = (user) => ({
+Users.format = (user) => ({
   username: user.username,
   ownPolls: user.ownPolls
 });
 
-module.exports = init;
+module.exports = Users;
