@@ -39,7 +39,7 @@ describe('Redux Reducers', () => {
       const payload = {
         type: types.REMOVE_AUTHED_USER
       }
-      const startingState = {
+      const initialState = {
         username: 'unchained',
         name: 'django'
       };
@@ -47,7 +47,7 @@ describe('Redux Reducers', () => {
         username: '',
         name: ''
       };
-      expect(authedUser(startingState, payload)).to.deep.equal(expectedResponse)
+      expect(authedUser(initialState, payload)).to.deep.equal(expectedResponse)
     });
   });
   describe('Is Fetching', () => {
@@ -96,7 +96,7 @@ describe('Redux Reducers', () => {
       const payload = {
         type: types.CLEAR_LOGIN_FORM
       }
-      const startingState = {
+      const initialState = {
         username: 'unchained',
         password: 'password'
       };
@@ -104,7 +104,7 @@ describe('Redux Reducers', () => {
         username: '',
         password: ''
       };
-      expect(loginForm(startingState, payload)).to.deep.equal(expectedResponse);
+      expect(loginForm(initialState, payload)).to.deep.equal(expectedResponse);
     });
   });
   describe('Poll Form', () => {
@@ -192,7 +192,7 @@ describe('Redux Reducers', () => {
       const payload = {
         type: types.CLEAR_POLL_FORM
       };
-      const startingState = {
+      const initialState = {
         formType: 'Edit',
         name: 'A New Poll',
         options: ['yes', 'no']
@@ -261,7 +261,7 @@ describe('Redux Reducers', () => {
         type: types.DELETE_POLL,
         pollName: 'A New Poll 1'
       };
-      const startingState = [{
+      const initialState = [{
         name: 'A New Poll',
         options: {
           yes: 0,
@@ -298,7 +298,7 @@ describe('Redux Reducers', () => {
         },
         submitter: 'unchained'
       }];
-      expect(polls(startingState, payload)).to.deep.equal(expectedResponse);
+      expect(polls(initialState, payload)).to.deep.equal(expectedResponse);
     });
     it('Edits a poll', () => {
       const payload = {
@@ -314,7 +314,7 @@ describe('Redux Reducers', () => {
           submitter: 'unchained'
         }
       };
-      const startingState = [{
+      const initialState = [{
         name: 'A New Poll',
         options: {
           yes: 0,
@@ -331,7 +331,7 @@ describe('Redux Reducers', () => {
         },
         submitter: 'unchained'
       }];
-      expect(polls(startingState, payload)).to.deep.equal(expectedResponse);
+      expect(polls(initialState, payload)).to.deep.equal(expectedResponse);
     });
     it('Changes the polls selected option', () => {
     const payload = {
@@ -339,7 +339,7 @@ describe('Redux Reducers', () => {
       pollName: 'A New Poll',
       option: 'yes'
     };
-    const startingState = [{
+    const initialState = [{
       name: 'A New Poll',
       options: {
         yes: 0,
@@ -357,7 +357,7 @@ describe('Redux Reducers', () => {
       submitter: 'unchained',
       selectedOption: 'yes'
     }];
-    expect(polls(startingState, payload)).to.deep.equal(expectedResponse);
+    expect(polls(initialState, payload)).to.deep.equal(expectedResponse);
     });
     it('Votes on a poll', () => {
       const payload = {
@@ -365,7 +365,7 @@ describe('Redux Reducers', () => {
         pollName: 'A New Poll',
         option: 'yes'
       };
-      const startingState = [{
+      const initialState = [{
         name: 'A New Poll',
         options: {
           yes: 0,
@@ -381,7 +381,99 @@ describe('Redux Reducers', () => {
         },
         submitter: 'unchained'
       }];
-      expect(polls(startingState, payload)).to.deep.equal(expectedResponse);
+      expect(polls(initialState, payload)).to.deep.equal(expectedResponse);
+    });
+  });
+  describe('Signup Form', () => {
+    it('Returns the initial state', () => {
+      const expectedResponse = {
+        username: '',
+        name: '',
+        password: ''
+      };
+      expect(signupForm(undefined, {})).to.deep.equal(expectedResponse);
+    });
+    it('Changes the username', () => {
+      const payload = {
+        type: types.CHANGE_SIGNUP_USERNAME,
+        value: 'unchained'
+      };
+      const expectedResponse = {
+        username: 'unchained',
+        name: '',
+        password: ''
+      };
+      expect(signupForm(undefined, payload)).to.deep.equal(expectedResponse);
+    });
+    it('Changes the name', () => {
+      const payload = {
+        type: types.CHANGE_SIGNUP_NAME,
+        value: 'django'
+      };
+      const expectedResponse = {
+        username: '',
+        name: 'django',
+        password: ''
+      };
+      expect(signupForm(undefined, payload)).to.deep.equal(expectedResponse);
+    });
+    it('Changes the password', () => {
+      const payload = {
+        type: types.CHANGE_SIGNUP_PASSWORD,
+        value: 'password'
+      };
+      const expectedResponse = {
+        username: '',
+        name: '',
+        password: 'password'
+      };
+      expect(signupForm(undefined, payload)).to.deep.equal(expectedResponse);
+    });
+    it('Clears the signup form', () => {
+      const payload = {
+        type: types.CLEAR_SIGNUP_FORM
+      };
+      const initialState = {
+        username: 'unchained',
+        name: 'django',
+        password: 'password'
+      };
+      const expectedResponse = {
+        username: '',
+        name: '',
+        password: ''
+      };
+      expect(signupForm(initialState, payload)).to.deep.equal(expectedResponse);
+    });
+  });
+  describe('Users Page', () => {
+    it('Returns the initial state', () => {
+      expect(usersPage(undefined, {})).to.equal(1);
+    });
+    it('Changes the polls page to the passed in number', () => {
+      const payload = {
+        type: types.CHANGE_USERS_PAGE,
+        pageNumber: 4
+      };
+      expect(usersPage(undefined, payload)).to.equal(4);
+    });
+    it('Changes the polls page to the next page', () => {
+      const payload = {
+        type: types.NEXT_USERS_PAGE
+      };
+      expect(usersPage(undefined, payload)).to.equal(2);
+    });
+    it('Changes the polls page to the previous page', () => {
+      const payload = {
+        type: types.PREVIOUS_USERS_PAGE
+      };
+      expect(usersPage(10, payload)).to.equal(9);
+    });
+  });
+  describe('Users', () => {
+    it('Returns the initial state', () => {
+      expect(users(undefined, {})).to.be.an('array');
+      expect(users(undefined, {})).to.have.lengthOf(0);
     });
   });
 });
