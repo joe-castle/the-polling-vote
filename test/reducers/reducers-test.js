@@ -475,5 +475,48 @@ describe('Redux Reducers', () => {
       expect(users(undefined, {})).to.be.an('array');
       expect(users(undefined, {})).to.have.lengthOf(0);
     });
+    it('Adds a user', () => {
+      const payload = {
+        type: types.ADD_USER,
+        username: 'unchained'
+      };
+      const expectedResponse = [{
+        username: 'unchained',
+        ownPolls: []
+      }];
+      expect(users(undefined, payload)).to.deep.equal(expectedResponse);
+    });
+    it('Adds own poll to user', () => {
+      const payload = {
+        type: types.ADD_OWN_POLL,
+        username: 'unchained',
+        pollName: 'A New Poll'
+      };
+      const startingState = [{
+        username: 'unchained',
+        ownPolls: []
+      }];
+      const expectedResponse = [{
+        username: 'unchained',
+        ownPolls: ['A New Poll']
+      }];
+      expect(users(startingState, payload)).to.deep.equal(expectedResponse);
+    });
+    it('Deletes own poll from user', () => {
+      const payload = {
+        type: types.DELETE_OWN_POLL,
+        username: 'unchained',
+        pollName: 'A New Poll'
+      };
+      const startingState = [{
+        username: 'unchained',
+        ownPolls: ['A New Poll']
+      }];
+      const expectedResponse = [{
+        username: 'unchained',
+        ownPolls: []
+      }];
+      expect(users(startingState, payload)).to.deep.equal(expectedResponse);
+    });
   });
 });
