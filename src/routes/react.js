@@ -6,7 +6,7 @@ export const history = useRouterHistory(
   createBrowserHistory
 )({ queryKey: false });
 
-import App from '../components/app';
+import App from '../containers/app';
 import Polls from '../containers/polls';
 import Poll from '../components/poll';
 import Users from '../containers/users';

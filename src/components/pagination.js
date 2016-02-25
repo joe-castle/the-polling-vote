@@ -14,7 +14,8 @@ export default class Pagination extends Component {
           className={classNames({
             active: i === this.props.pageNumber,
             [this.props.baseColor]: i === this.props.pageNumber
-          })}>
+          })}
+        >
           <a
             href='#'
             onClick={(e) => {

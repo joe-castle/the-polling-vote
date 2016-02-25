@@ -5,7 +5,7 @@ import Navbar from '../components/navbar';
 import Footer from '../components/footer';
 import Preloader from '../components/preloader';
 
-const App = ({
+export const App = ({
   children,
   location,
   isFetching
