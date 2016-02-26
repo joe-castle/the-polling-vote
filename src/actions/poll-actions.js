@@ -3,11 +3,11 @@ import * as types from './action-types';
 import {isFetching} from '../actions/is-fetching-actions';
 import {addOwnPoll, deleteOwnPoll} from './user-actions';
 import {clearPollForm, changePollFormType} from './poll-form-actions';
-// import {removeAuthedUser} from './authed-user-actions';
+import {removeAuthedUser} from './authed-user-actions';
 
-// import {history} from '../routes/react';
+import {history} from '../routes/react';
 import formatUrl from '../utils/format-url';
-// import ajax from '../utils/ajax';
+import ajax from '../utils/ajax';
 
 export const addPoll = (payload) => ({
   type: types.ADD_POLL,

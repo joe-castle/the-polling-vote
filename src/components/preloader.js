@@ -1,7 +1,10 @@
 import React from 'react';
 
 export default () => (
-  <div>
+  <div style={{
+    height: window.innerHeight,
+    width: window.innerWidth
+  }}>
     <div className='preloader-wrapper big active'>
       <div className='spinner-layer spinner-blue-only'>
         <div className='circle-clipper left'>`
