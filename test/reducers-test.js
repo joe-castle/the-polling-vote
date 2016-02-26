@@ -2,17 +2,17 @@
 
 import {expect} from 'chai';
 
-import * as types from '../../src/actions/action-types';
+import * as types from '../src/actions/action-types';
 
-import authedUser from '../../src/reducers/authed-user';
-import isFetching from '../../src/reducers/is-fetching';
-import loginForm from '../../src/reducers/login-form';
-import pollForm from '../../src/reducers/poll-form';
-import pollsPage from '../../src/reducers/polls-page';
-import polls from '../../src/reducers/polls';
-import signupForm from '../../src/reducers/signup-form';
-import usersPage from '../../src/reducers/users-page';
-import users from '../../src/reducers/users';
+import authedUser from '../src/reducers/authed-user';
+import isFetching from '../src/reducers/is-fetching';
+import loginForm from '../src/reducers/login-form';
+import pollForm from '../src/reducers/poll-form';
+import pollsPage from '../src/reducers/polls-page';
+import polls from '../src/reducers/polls';
+import signupForm from '../src/reducers/signup-form';
+import usersPage from '../src/reducers/users-page';
+import users from '../src/reducers/users';
 
 describe('Redux Reducers', () => {
   describe('Authed User', () => {

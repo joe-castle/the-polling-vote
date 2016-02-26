@@ -3,10 +3,10 @@
 import request from 'supertest';
 import {expect} from 'chai';
 
-import client from '../../src/data/client';
-import Users from '../../src/models/users';
-import Polls from '../../src/models/polls';
-import app from '../../src/routes/express-config';
+import client from '../src/data/client';
+import Users from '../src/models/users';
+import Polls from '../src/models/polls';
+import app from '../src/routes/express-config';
 
 const agent = request.agent(app);
 
