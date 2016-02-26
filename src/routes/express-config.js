@@ -13,6 +13,7 @@ const client = require('../data/client');
 const router = require('./express-router');
 
 app.set('trust proxy', true);
+app.use(express.static(`${__dirname}/../public`));
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(session({

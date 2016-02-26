@@ -4,7 +4,7 @@ module.exports = (initialState) => (
     <html>
       <head>
         <meta charset="utf-8">
-        <link href="/${process.cwd()}/src/public/bundle.css" rel="stylesheet">
+        <link href="/bundle.css" rel="stylesheet">
         <title>FCC Voting App</title>
       </head>
       <body>
@@ -14,7 +14,7 @@ module.exports = (initialState) => (
         <script>
           window.__INITIAL_STATE__ = ${JSON.stringify(initialState)}
         </script>
-        <script src="/${process.cwd()}/src/public/bundle.js"></script>
+        <script src="/bundle.js"></script>
       </body>
     </html>
   `
