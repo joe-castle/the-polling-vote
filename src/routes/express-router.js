@@ -30,6 +30,6 @@ router.post('/logout', (req, res) => {
   res.end();
 })
 
-router.use('*', renderHtmlWithInitialState);
+// router.use('*', renderHtmlWithInitialState);
 
 module.exports = router;
