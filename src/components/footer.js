@@ -20,7 +20,9 @@ export default ({baseColor}) => (
     <div className='footer-copyright'>
       <div className='container'>
         © 2016 Joe Smith
-        <a href='github' className='grey-text text-lighten-4 right'>MIT License</a>
+        <a
+          target='_blank'
+          href='https://github.com/joesmith100/the-polling-vote/blob/master/LICENSE' className='grey-text text-lighten-4 right'>MIT License</a>
       </div>
     </div>
   </footer>
