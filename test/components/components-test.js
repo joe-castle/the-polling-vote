@@ -4,21 +4,25 @@ import React from 'react';
 import {expect} from 'chai';
 import sd from 'skin-deep';
 
+// Spoofs History into believeing a dom exists.
 global.window = {};
 global.window.document = {};
 global.window.document.createElement = {};
+global.window.__INITIAL_STATE__ = {};
+global.window.location = {};
+global.navigator = {};
+global.navigator.userAgent = [];
+global.configureStore = () => {};
 
 import Footer from '../../src/components/footer';
-import NavBar from '../../src/components/navbar';
 import Pagination from '../../src/components/pagination';
-// import Poll from '../../src/components/poll';
+import Poll from '../../src/components/poll';
 import Preloader from '../../src/components/preloader';
-// import User from '../../src/components/user';
+import User from '../../src/components/user';
 
-// import {App} from '../../src/containers/app';
-// import {Login} from '../../src/containers/login';
+import {Login} from '../../src/containers/login';
 import {Polls} from '../../src/containers/polls';
-// import {Signup} from '../../src/containers/Signup';
+import {Signup} from '../../src/containers/Signup';
 import {Users} from '../../src/containers/users';
 
 describe('React components', () => {
@@ -40,9 +44,6 @@ describe('React components', () => {
       expect(secondaryContentDiv.text()).to.contain('© 2016 Joe Smith');
       expect(secondaryContentDiv.subTree('a').text()).to.equal('MIT License');
     });
-  });
-  describe('Navbar', () => {
-    it('Renders the navbar');
   });
   describe('Pagination', () => {
     it('Renders pagination with 1 page of results', () => {
@@ -82,10 +83,39 @@ describe('React components', () => {
       expect(liElements[3].text()).to.equal('chevron_right');
 
       expect(liElements[2].props.className).to.contain('active');
+      expect(liElements[1].props.className).to.not.contain('active');
     });
   });
   describe('Poll', () => {
-    it('Renders a poll');
+    it('Renders an error when the poll doesn\'t exist', () => {
+      let tree = sd.shallowRender(
+        <Poll
+          params={{poll: 'A_New_Poll'}}
+          polls={[]}
+        />
+      );
+
+      expect(tree.subTree('h4').text()).to.equal('Unable to find the poll:');
+      expect(tree.subTree('h5').text()).to.equal('A New Poll');
+    });
+    it('Renders a poll', () => {
+      let tree = sd.shallowRender(
+        <Poll
+          params={{poll: 'A_New_Poll'}}
+          polls={[{
+            name: 'A New Poll',
+            options: {
+              yes: 0,
+              no: 0
+            },
+            submitter: 'unchained'
+          }]}
+        />
+      );
+
+      expect(tree.subTree('Link').props.to).to.equal('/users/unchained');
+      expect(tree.subTree('Link').props.children).to.equal('unchained');
+    });
   });
   describe('Preloader', () => {
     it('Renders the preloader', () => {
@@ -99,14 +129,54 @@ describe('React components', () => {
       expect(tree.subTree('.loader-bg')).to.not.be.false;
     });
   });
-  describe('App', () => {
-    it('Renders a app');
-  });
   describe('User', () => {
-    it('Renders a user');
+    it('Renders an error when the user doesn\'t exist', () => {
+      let tree = sd.shallowRender(
+        <User
+          params={{user: 'unchained'}}
+          users={[]}
+        />
+      );
+
+      expect(tree.subTree('h4').text()).to.equal('Unable to find the user:');
+      expect(tree.subTree('h5').text()).to.equal('unchained');
+    });
+    it('Renders a user', () => {
+      let tree = sd.shallowRender(
+        <User
+          params={{user: 'unchained'}}
+          users={[{
+            username: 'unchained',
+            ownPolls: ['A New Poll']
+          }]}
+          pollForm={{
+            formType: 'Add',
+            name: '',
+            options: ['', '']
+          }}
+        />
+      );
+
+      expect(tree.subTree('h1').text()).to.equal('unchained');
+
+      expect(tree.subTree('Link').props.to).to.equal('/polls/A_New_Poll');
+      expect(tree.subTree('Link').props.children).to.equal('A New Poll');
+    });
   });
   describe('Login', () => {
-    it('Renders the login');
+    it('Renders the login', () => {
+      let tree = sd.shallowRender(
+        <Login
+          loginForm={{
+            username: 'unchained',
+            password: 'password'
+          }}
+        />
+      );
+      expect(tree.subTree('h1').text()).to.equal('Login');
+      expect(tree.everySubTree('input')[0].props.value).to.equal('unchained');
+      expect(tree.everySubTree('input')[1].props.value).to.equal('password');
+    });
   });
   describe('Polls', () => {
     it('Renders "No active polls found." when no active polls exist', () => {
@@ -127,7 +197,21 @@ describe('React components', () => {
     });
   });
   describe('Signup', () => {
-    it('Renders the signup');
+    it('Renders the signup', () => {
+      let tree = sd.shallowRender(
+        <Signup
+          signupForm={{
+            username: 'unchained',
+            name: 'django',
+            password: 'password'
+          }}
+        />
+      );
+      expect(tree.subTree('h1').text()).to.equal('Signup');
+      expect(tree.everySubTree('input')[0].props.value).to.equal('unchained');
+      expect(tree.everySubTree('input')[1].props.value).to.equal('django');
+      expect(tree.everySubTree('input')[2].props.value).to.equal('password');
+    });
   });
   describe('Users', () => {
     it('Renders "No active polls found." when no active polls exist', () => {
