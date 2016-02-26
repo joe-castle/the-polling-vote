@@ -12,7 +12,7 @@
     "build": "npm run clean && npm run build:webpack",
     "deploy:heroku": "git push heroku master",
     "deploy:github": "git push origin master",
-    "deploy": "npm run deploy:github && npm run deploy:heroku"
+    "deploy": "npm run build && npm run deploy:github && npm run deploy:heroku"
   },
   "author": "Joe Smith <joesmith0488@gmail.com>",
   "license": "MIT",
